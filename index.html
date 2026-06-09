@@ -116,6 +116,76 @@
             box-shadow: 0 15px 30px -5px rgba(15, 23, 42, 0.3);
             border-color: rgba(15, 23, 42, 0.5);
         }
+
+                /* From Uiverse.io by elijahgummer */ 
+        .button-with-icon {
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 25px;
+        border: 1px solid #d32f2f;
+        font-family: "Istok Web", sans-serif;
+        letter-spacing: 1px;
+        padding: 0 12px;
+        text-align: center;
+        width: 120px;
+        height: 40px;
+        font-size: 13px;
+        text-transform: uppercase;
+        font-weight: normal;
+        border-radius: 3px;
+        outline: none;
+        user-select: none;
+        cursor: pointer;
+        transform: translateY(0px);
+        position: relative;
+        box-shadow:
+            inset 0 30px 30px -15px rgba(255, 255, 255, 0.1),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.3),
+            inset 0 1px 20px rgba(0, 0, 0, 0),
+            0 3px 0 #d32f2f,
+            0 3px 2px rgba(0, 0, 0, 0.2),
+            0 5px 10px rgba(0, 0, 0, 0.1),
+            0 10px 20px rgba(0, 0, 0, 0.1);
+        background: #e53935;
+        color: white;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+        transition: 150ms all ease-in-out;
+        }
+
+        .button-with-icon .icon {
+        margin-right: 8px;
+        width: 24px;
+        height: 24px;
+        transition: all 0.5s ease-in-out;
+        }
+
+        .button-with-icon:active {
+        transform: translateY(3px);
+        box-shadow:
+            inset 0 16px 2px -15px rgba(0, 0, 0, 0),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.15),
+            inset 0 1px 20px rgba(0, 0, 0, 0.1),
+            0 0 0 #d32f2f,
+            0 0 0 2px rgba(255, 255, 255, 0.5),
+            0 0 0 rgba(0, 0, 0, 0),
+            0 0 0 rgba(0, 0, 0, 0);
+        }
+
+        .button-with-icon:hover .text {
+        transform: translateX(85px);
+        }
+
+        .button-with-icon:hover .icon {
+        transform: translate(27px);
+        scale: 1.5;
+        }
+
+        .text {
+        transition: all 0.5s ease-in-out;
+        }
+
     </style>
 </head>
 <body class="text-slate-800 antialiased selection:bg-primary selection:text-white">
@@ -183,7 +253,7 @@
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">E-Portofolio Saya.</span>
                     </h1>
                     <p class="text-lg text-gray-600 leading-relaxed max-w-2xl border-l-4 border-primary pl-4 italic">
-                        "Menjadi guru bukan sekadar profesi, melainkan panggilan jiwa untuk mencerdaskan kehidupan bangsa. Saya berkomitmen untuk terus belajar, berinovasi, dan menginspirasi peserta didik dalam dunia teknologi informasi."
+                        "Menjadi guru bukan sekadar profesi, melainkan panggilan jiwa untuk mencerdaskan kehidupan bangsa. Saya berkomitmen untuk terus belajar, berinovasi, dan menginspirasi murid dalam dunia teknologi informasi."
                     </p>
                     
                     <div class="flex flex-wrap gap-4 pt-4">
@@ -320,7 +390,7 @@
                                 Motivasi utama saya dalam menekuni profesi mulia ini adalah keinginan luhur untuk menyalurkan, menyebarluaskan, serta mengamalkan ilmu pengetahuan teknologi yang saya miliki agar senantiasa mendatangkan manfaat nyata bagi orang lain. Meskipun dasar akademis saya berasal dari rumpun keilmuan teknologi murni (non-kependidikan), hal tersebut justru memicu semangat saya untuk tiada henti belajar dan beradaptasi.
                             </p>
                             <p>
-                                Melalui perjalanan program PPG ini, saya banyak bersentuhan dengan khazanah baru yang tidak pernah saya dapatkan selama perkuliahan S1 dahulu, khususnya pemahaman mendalam tentang teori pedagogi, manajemen sekolah, serta seni merancang iklim belajar yang bermakna bagi peserta didik.
+                                Melalui perjalanan program PPG ini, saya banyak bersentuhan dengan khazanah baru yang tidak pernah saya dapatkan selama perkuliahan S1 dahulu, khususnya pemahaman mendalam tentang teori pedagogi, manajemen sekolah, serta seni merancang iklim belajar yang bermakna bagi murid.
                             </p>
                         </div>
                     </div>
@@ -458,7 +528,7 @@
                         </div>
                         <h4 class="font-bold text-secondary text-sm md:text-base mb-1">Kompetensi Pedagogik</h4>
                         <p class="text-xs text-gray-500 leading-relaxed">
-                            Kemampuan dalam perencanaan, pelaksanaan, dan evaluasi pembelajaran yang efektif sesuai karakteristik peserta didik.
+                            Kemampuan dalam perencanaan, pelaksanaan, dan evaluasi pembelajaran yang efektif sesuai karakteristik murid.
                         </p>
                     </div>
                     <!-- Kompetensi Kepribadian -->
@@ -717,7 +787,7 @@
                                         
                                         <div>
                                             <h5 class="font-bold text-primary flex items-center gap-2 mb-2"><i class="fas fa-bullseye"></i> Tujuan Pembelajaran</h5>
-                                            <p class="text-sm text-gray-600 leading-relaxed text-justify">Tujuan pembelajaran pada RPP ini berfokus pada pemahaman sistem komputer, komponen utama komputer (hardware, software, brainware), fungsi komputer, serta siklus kerja komputer (input-process-output-storage). Tujuan tersebut sudah sesuai dengan capaian pembelajaran dasar informatika karena membantu peserta didik memahami fondasi teknologi komputer sebelum mempelajari materi yang lebih kompleks.</p>
+                                            <p class="text-sm text-gray-600 leading-relaxed text-justify">Tujuan pembelajaran pada RPP ini berfokus pada pemahaman sistem komputer, komponen utama komputer (hardware, software, brainware), fungsi komputer, serta siklus kerja komputer (input-process-output-storage). Tujuan tersebut sudah sesuai dengan capaian pembelajaran dasar informatika karena membantu murid memahami fondasi teknologi komputer sebelum mempelajari materi yang lebih kompleks.</p>
                                         </div>
                                         
                                         <div>
@@ -726,16 +796,16 @@
                                                 <li>Direct Instruction</li>
                                                 <li>Refleksi Konsep</li>
                                             </ul>
-                                            <p class="text-sm text-gray-600 leading-relaxed text-justify">Pendekatan pedagogi yang diterapkan bersifat kontekstual and student centered. Guru menggunakan apersepsi melalui pengalaman penggunaan HP dan komputer sehari-hari sehingga peserta didik lebih mudah menghubungkan konsep dengan pengalaman nyata. Pembelajaran juga mengandung unsur meaningful learning karena peserta didik tidak hanya menerima materi, tetapi diajak memahami bagaimana komputer bekerja dalam aktivitas sehari-hari.</p>
+                                            <p class="text-sm text-gray-600 leading-relaxed text-justify">Pendekatan pedagogi yang diterapkan bersifat kontekstual and student centered. Guru menggunakan apersepsi melalui pengalaman penggunaan HP dan komputer sehari-hari sehingga murid lebih mudah menghubungkan konsep dengan pengalaman nyata. Pembelajaran juga mengandung unsur meaningful learning karena murid tidak hanya menerima materi, tetapi diajak memahami bagaimana komputer bekerja dalam aktivitas sehari-hari.</p>
                                         </div>
 
                                         <div>
                                             <h5 class="font-bold text-emerald-600 flex items-center gap-2 mb-2"><i class="fas fa-check-circle"></i> Faktor Keberhasilan</h5>
                                             <ul class="list-decimal pl-5 text-sm text-gray-600 space-y-1">
-                                                <li>Materi sangat dekat dengan aktivitas peserta didik sehari-hari.</li>
-                                                <li>Guru menggunakan pertanyaan reflektif yang meningkatkan rasa ingin tahu peserta didik.</li>
+                                                <li>Materi sangat dekat dengan aktivitas murid sehari-hari.</li>
+                                                <li>Guru menggunakan pertanyaan reflektif yang meningkatkan rasa ingin tahu murid.</li>
                                                 <li>Pembelajaran berlangsung interaktif melalui diskusi dan tanya jawab.</li>
-                                                <li>Penggunaan contoh nyata membantu peserta didik memahami siklus kerja komputer.</li>
+                                                <li>Penggunaan contoh nyata membantu murid memahami siklus kerja komputer.</li>
                                                 <li>Lingkungan laboratorium komputer mendukung pembelajaran lebih efektif.</li>
                                             </ul>
                                         </div>
@@ -745,8 +815,8 @@
                                             <ul class="list-decimal pl-5 text-sm text-gray-600 space-y-1">
                                                 <li>Menambahkan media visual seperti diagram IPO (Input-Process-Output) agar konsep lebih mudah dipahami.</li>
                                                 <li>Mengurangi dominasi ceramah dan memperbanyak praktik identifikasi perangkat komputer.</li>
-                                                <li>Memberikan aktivitas demonstrasi langsung untuk peserta didik yang memiliki gaya belajar kinestetik.</li>
-                                                <li>Guru perlu memberikan pendampingan lebih intens kepada peserta didik yang masih kesulitan memahami istilah teknis.</li>
+                                                <li>Memberikan aktivitas demonstrasi langsung untuk murid yang memiliki gaya belajar kinestetik.</li>
+                                                <li>Guru perlu memberikan pendampingan lebih intens kepada murid yang masih kesulitan memahami istilah teknis.</li>
                                             </ul>
                                         </div>
 
@@ -778,14 +848,14 @@
                                         
                                         <div>
                                             <h5 class="font-bold text-primary flex items-center gap-2 mb-2"><i class="fas fa-bullseye"></i> Tujuan Pembelajaran</h5>
-                                            <p class="text-sm text-gray-600 leading-relaxed text-justify mb-2">Tujuan pembelajaran pada RPP ini menekankan kemampuan peserta didik dalam:</p>
+                                            <p class="text-sm text-gray-600 leading-relaxed text-justify mb-2">Tujuan pembelajaran pada RPP ini menekankan kemampuan murid dalam:</p>
                                             <ul class="list-disc pl-5 text-sm text-gray-600 mb-2 space-y-1">
                                                 <li>mengenal profesi informatika,</li>
                                                 <li>memahami keterampilan yang dibutuhkan,</li>
                                                 <li>mengaitkan profesi informatika dengan bidang DPIB,</li>
                                                 <li>serta menganalisis kebutuhan profesi informatika dalam dunia konstruksi modern.</li>
                                             </ul>
-                                            <p class="text-sm text-gray-600 leading-relaxed text-justify">Tujuan ini sangat relevan dengan pembelajaran vokasional SMK karena membantu peserta didik memahami hubungan antara dunia pendidikan dan dunia kerja.</p>
+                                            <p class="text-sm text-gray-600 leading-relaxed text-justify">Tujuan ini sangat relevan dengan pembelajaran vokasional SMK karena membantu murid memahami hubungan antara dunia pendidikan dan dunia kerja.</p>
                                         </div>
                                         
                                         <div>
@@ -796,7 +866,7 @@
                                                 <li>Problem Based Learning (PBL)</li>
                                                 <li>Refleksi Konsep</li>
                                             </ul>
-                                            <p class="text-sm text-gray-600 leading-relaxed text-justify mb-2">Konsep pedagogi utama yang terlihat adalah pembelajaran kontekstual dan pembelajaran berbasis masalah. Peserta didik diberikan studi kasus pembangunan smart building sehingga mereka dapat menganalisis kebutuhan profesi informatika secara nyata.</p>
+                                            <p class="text-sm text-gray-600 leading-relaxed text-justify mb-2">Konsep pedagogi utama yang terlihat adalah pembelajaran kontekstual dan pembelajaran berbasis masalah. murid diberikan studi kasus pembangunan smart building sehingga mereka dapat menganalisis kebutuhan profesi informatika secara nyata.</p>
                                             <p class="text-sm text-gray-600 leading-relaxed text-justify">Selain itu, pembelajaran juga mengembangkan keterampilan abad 21 seperti berpikir kritis, komunikasi, kolaborasi, dan pemecahan masalah.</p>
                                         </div>
 
@@ -804,9 +874,9 @@
                                         <div>
                                             <h5 class="font-bold text-emerald-600 flex items-center gap-2 mb-2"><i class="fas fa-check-circle"></i> Faktor Keberhasilan</h5>
                                             <ul class="list-decimal pl-5 text-sm text-gray-600 space-y-1">
-                                                <li>Materi dikaitkan langsung dengan jurusan DPIB sehingga lebih relevan bagi peserta didik.</li>
+                                                <li>Materi dikaitkan langsung dengan jurusan DPIB sehingga lebih relevan bagi murid.</li>
                                                 <li>Penggunaan studi kasus nyata meningkatkan motivasi belajar.</li>
-                                                <li>Aktivitas presentasi membantu meningkatkan kemampuan komunikasi peserta didik.</li>
+                                                <li>Aktivitas presentasi membantu meningkatkan kemampuan komunikasi murid.</li>
                                                 <li>LKPD berbasis analisis mendorong kemampuan berpikir kritis.</li>
                                                 <li>Guru aktif membimbing dan memberikan pertanyaan pengarah selama penyelidikan.</li>
                                             </ul>
@@ -816,8 +886,8 @@
                                             <h5 class="font-bold text-amber-600 flex items-center gap-2 mb-2"><i class="fas fa-sync-alt"></i> Perubahan & Penyesuaian</h5>
                                             <ul class="list-decimal pl-5 text-sm text-gray-600 space-y-1">
                                                 <li>Guru perlu memberikan contoh profesi informatika yang lebih dekat dengan dunia kerja lokal atau industri sekitar.</li>
-                                                <li>Beberapa peserta didik perlu dibimbing saat menghubungkan profesi informatika dengan DPIB.</li>
-                                                <li>Aktivitas presentasi dapat dibuat lebih variatif agar seluruh peserta didik aktif.</li>
+                                                <li>Beberapa murid perlu dibimbing saat menghubungkan profesi informatika dengan DPIB.</li>
+                                                <li>Aktivitas presentasi dapat dibuat lebih variatif agar seluruh murid aktif.</li>
                                                 <li>Pembelajaran dapat dikembangkan dengan menghadirkan video atau wawancara profesi informatika agar lebih nyata dan inovatif.</li>
                                             </ul>
                                         </div>
@@ -862,18 +932,18 @@
                                                 <li>Problem Based Learning (PBL)</li>
                                                 <li>Refleksi konsep</li>
                                             </ul>
-                                            <p class="text-sm text-gray-600 leading-relaxed text-justify">Konsep pedagogi yang digunakan sudah sesuai dengan karakteristik murid yang aktif and lebih mudah memahami materi melalui praktik kontekstual. Pendekatan PBL terlihat ketika peserta didik diminta menganalisis kebutuhan perangkat jaringan pada kasus laboratorium sekolah.</p>
+                                            <p class="text-sm text-gray-600 leading-relaxed text-justify">Konsep pedagogi yang digunakan sudah sesuai dengan karakteristik murid yang aktif and lebih mudah memahami materi melalui praktik kontekstual. Pendekatan PBL terlihat ketika murid diminta menganalisis kebutuhan perangkat jaringan pada kasus laboratorium sekolah.</p>
                                         </div>
 
                                         <div>
                                             <h5 class="font-bold text-emerald-600 flex items-center gap-2 mb-2"><i class="fas fa-check-circle"></i> Faktor Keberhasilan</h5>
                                             <p class="text-sm text-gray-600 mb-2">Beberapa faktor yang mendukung keberhasilan pembelajaran:</p>
                                             <ul class="list-decimal pl-5 text-sm text-gray-600 space-y-1">
-                                                <li>Materi dekat dengan kehidupan sehari-hari peserta didik sehingga mudah dipahami.</li>
+                                                <li>Materi dekat dengan kehidupan sehari-hari murid sehingga mudah dipahami.</li>
                                                 <li>Penggunaan LKPD berbasis studi kasus membantu meningkatkan kemampuan analisis.</li>
                                                 <li>Pemanfaatan media digital seperti Google Form, Google Drive, dan AI membantu pembelajaran lebih interaktif.</li>
-                                                <li>Guru menggunakan pertanyaan pemantik sehingga peserta didik lebih aktif berdiskusi.</li>
-                                                <li>Rubrik penilaian sudah cukup rinci sehingga mempermudah pengukuran capaian peserta didik.</li>
+                                                <li>Guru menggunakan pertanyaan pemantik sehingga murid lebih aktif berdiskusi.</li>
+                                                <li>Rubrik penilaian sudah cukup rinci sehingga mempermudah pengukuran capaian murid.</li>
                                             </ul>
                                         </div>
 
@@ -881,9 +951,9 @@
                                             <h5 class="font-bold text-amber-600 flex items-center gap-2 mb-2"><i class="fas fa-sync-alt"></i> Perubahan & Penyesuaian</h5>
                                             <p class="text-sm text-gray-600 mb-2">Dalam pelaksanaan pembelajaran, diperlukan beberapa penyesuaian, seperti:</p>
                                             <ul class="list-decimal pl-5 text-sm text-gray-600 space-y-1">
-                                                <li>Guru perlu memberikan contoh visual atau simulasi jaringan agar peserta didik lebih mudah memahami konsep abstrak.</li>
-                                                <li>Beberapa peserta didik yang pasif perlu didorong melalui diskusi kelompok kecil.</li>
-                                                <li>Penggunaan AI perlu diarahkan agar peserta didik tetap memahami konsep, bukan sekadar menyalin jawaban.</li>
+                                                <li>Guru perlu memberikan contoh visual atau simulasi jaringan agar murid lebih mudah memahami konsep abstrak.</li>
+                                                <li>Beberapa murid yang pasif perlu didorong melalui diskusi kelompok kecil.</li>
+                                                <li>Penggunaan AI perlu diarahkan agar murid tetap memahami konsep, bukan sekadar menyalin jawaban.</li>
                                                 <li>Pembelajaran dapat dikembangkan menjadi praktik sederhana membuat topologi jaringan agar lebih aplikatif.</li>
                                             </ul>
                                         </div>
@@ -1086,7 +1156,7 @@
                                 </div>
                                 <h4 class="text-lg font-bold text-secondary mb-3">Pengalaman Berharga</h4>
                                 <p class="text-sm text-gray-600 leading-relaxed text-justify">
-                                    Selama mengikuti PPL Terbimbing di SMK Negeri 2 Yogyakarta, saya memperoleh banyak pengalaman berharga mengenai peran guru profesional, mulai dari tahap orientasi, observasi, asistensi, hingga praktik terbimbing. Saya belajar memahami manajemen sekolah, budaya kerja vokasi, karakteristik siswa, serta pentingnya menyelaraskan rancangan pembelajaran mulai dari tujuan, asesmen, hingga kebutuhan peserta didik di kelas.
+                                    Selama mengikuti PPL Terbimbing di SMK Negeri 2 Yogyakarta, saya memperoleh banyak pengalaman berharga mengenai peran guru profesional, mulai dari tahap orientasi, observasi, asistensi, hingga praktik terbimbing. Saya belajar memahami manajemen sekolah, budaya kerja vokasi, karakteristik siswa, serta pentingnya menyelaraskan rancangan pembelajaran mulai dari tujuan, asesmen, hingga kebutuhan murid di kelas.
                                 </p>
                             </div>
                         </div>
@@ -1099,7 +1169,7 @@
                                 </div>
                                 <h4 class="text-lg font-bold text-secondary mb-3">Tantangan & Solusi</h4>
                                 <p class="text-sm text-gray-600 leading-relaxed text-justify">
-                                    Tantangan utama yang dihadapi adalah adanya peserta didik yang kurang aktif, kurang percaya diri berpendapat, serta keterbatasan sarana praktik yang belum sepenuhnya optimal. Saya berupaya mengatasi hal ini dengan menerapkan pertanyaan pemantik yang merangsang keaktifan, menyelenggarakan diskusi kelompok kolaboratif, memberikan pendampingan personal, serta memanfaatkan perangkat yang tersedia seefektif mungkin.
+                                    Tantangan utama yang dihadapi adalah adanya murid yang kurang aktif, kurang percaya diri berpendapat, serta keterbatasan sarana praktik yang belum sepenuhnya optimal. Saya berupaya mengatasi hal ini dengan menerapkan pertanyaan pemantik yang merangsang keaktifan, menyelenggarakan diskusi kelompok kolaboratif, memberikan pendampingan personal, serta memanfaatkan perangkat yang tersedia seefektif mungkin.
                                 </p>
                             </div>
                         </div>
@@ -1284,8 +1354,8 @@
                             <span class="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full uppercase">Mengajar</span>
                             <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded">Foto</span>
                         </div>
-                        <h3 class="text-lg font-bold text-secondary mb-2">Mengajar Teori Sistem Komputer</h3>
-                        <p class="text-gray-600 text-sm">Menyelenggarakan pembelajaran terbimbing di kelas X DPIB 1. Fokus pembelajaran pada pembentukan cara berpikir kritis peserta didik.</p>
+                        <h3 class="text-lg font-bold text-secondary mb-2">Mengajar Teori Profesi Bidang Informatika</h3>
+                        <p class="text-gray-600 text-sm">Menyelenggarakan pembelajaran terbimbing di kelas X DPIB 1. Fokus pembelajaran pada pembentukan cara berpikir kritis murid.</p>
                     </div>
                 </div>
 
@@ -1298,7 +1368,7 @@
                             <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded">Foto</span>
                         </div>
                         <h3 class="text-lg font-bold text-secondary mb-2">Mengajar Teori Sistem Komputer</h3>
-                        <p class="text-gray-600 text-sm">Menyelenggarakan pembelajaran terbimbing di kelas X DPIB 1. Fokus pembelajaran pada pembentukan cara berpikir kritis peserta didik.</p>
+                        <p class="text-gray-600 text-sm">Menyelenggarakan pembelajaran terbimbing di kelas X DPIB 1. Fokus pembelajaran pada pembentukan cara berpikir kritis murid.</p>
                     </div>
                 </div>
 
@@ -1312,7 +1382,23 @@
                             <span class="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full uppercase">Mengajar</span>
                             <span class="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded">Video</span>
                         </div>
-                        <h3 class="text-lg font-bold text-secondary mb-2">Mengajar Jaringan Komputer</h3>
+                            <!-- From Uiverse.io by elijahgummer --> 
+                            <button class="button-with-icon">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 48 48"
+                                id="Play"
+                                class="icon"
+                            >
+                                <path
+                                d="M12 39c-.549 0-1.095-.15-1.578-.447A3.008 3.008 0 0 1 9 36V12c0-1.041.54-2.007 1.422-2.553a3.014 3.014 0 0 1 2.919-.132l24 12a3.003 3.003 0 0 1 0 5.37l-24 12c-.42.21-.885.315-1.341.315z"
+                                fill="#ffffff"
+                                class="color000000 svgShape"
+                                ></path>
+                            </svg>
+                            <span class="text">YOUTUBE</span>
+                            </button>
+
                         <p class="text-gray-600 text-sm">Video dokumentasi pembelajaran terbimbing praktik Jaringan Komputer. Penerapan modul ajar berbasis pemecahan masalah (Problem Based Learning).</p>
                     </div>
                 </div>
