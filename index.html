@@ -190,6 +190,32 @@
         transition: all 0.5s ease-in-out;
         }
 
+
+        /* Accessibility, future menu growth, and predictable layout */
+        [hidden] { display: none !important; }
+        :focus-visible { outline: 3px solid #06b6d4; outline-offset: 3px; }
+        #desktop-navigation { gap: clamp(.65rem, 1.5vw, 2rem); }
+        #desktop-navigation .nav-link { white-space: nowrap; }
+        .doc-card img[onclick] { cursor: zoom-in; }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+        }
+
+        /* Dropdown Artefak PPL: hover/focus desktop, expandable mobile */
+        .portfolio-menu { position: relative; }
+        .portfolio-popover { position: absolute; left: 0; top: 100%; min-width: 230px; padding: 8px; background: white; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 16px 36px rgba(15,23,42,.12); opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity .18s, transform .18s, visibility .18s; z-index: 70; }
+        .portfolio-menu:hover > .portfolio-popover, .portfolio-menu:focus-within > .portfolio-popover, .portfolio-menu.is-open > .portfolio-popover { opacity: 1; visibility: visible; transform: translateY(0); }
+        .portfolio-submenu { position: relative; }
+        .portfolio-submenu > .portfolio-popover { left: calc(100% - 2px); top: -8px; }
+        .portfolio-submenu:hover > .portfolio-popover, .portfolio-submenu:focus-within > .portfolio-popover, .portfolio-submenu.is-open > .portfolio-popover { opacity: 1; visibility: visible; transform: translateY(0); }
+        .portfolio-menuitem { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 16px; text-align: left; padding: 11px 13px; border-radius: 10px; color: #334155; font-size: .875rem; font-weight: 500; white-space: nowrap; }
+        .portfolio-menuitem:hover, .portfolio-menuitem:focus-visible { background: #eff6ff; color: #2563eb; outline: 2px solid transparent; }
+        .portfolio-menuitem:focus-visible { box-shadow: inset 0 0 0 2px #60a5fa; }
+        .portfolio-chevron { font-size: .65rem; margin-left: 5px; }
+        .portfolio-mobile-children { padding: 3px 0 5px 13px; border-left: 2px solid #dbeafe; margin-left: 16px; }
+        .portfolio-mobile-children .portfolio-menuitem { white-space: normal; }
+        .portfolio-mobile-children[hidden] { display: none; }
+        @media (prefers-reduced-motion: reduce) { .portfolio-popover { transition: none; } }
     </style>
 </head>
 <body class="text-slate-800 antialiased selection:bg-primary selection:text-white">
@@ -210,7 +236,7 @@
                 </div>
 
                 <!-- Desktop Menu -->
-                <div class="hidden md:flex space-x-8 items-center">
+                <div id="desktop-navigation" aria-label="Navigasi utama" class="hidden md:flex space-x-8 items-center">
                     <button onclick="navigate('beranda')" class="nav-link text-gray-600 hover:text-primary transition-colors px-1 py-2 text-sm font-medium">Beranda</button>
                     <button onclick="navigate('profil')" class="nav-link text-gray-600 hover:text-primary transition-colors px-1 py-2 text-sm font-medium">Profil</button>
                     <button onclick="navigate('artefak')" class="nav-link text-gray-600 hover:text-primary transition-colors px-1 py-2 text-sm font-medium">Artefak PPL</button>
@@ -220,7 +246,7 @@
 
                 <!-- Mobile Menu Button -->
                 <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-primary focus:outline-none p-2">
+                    <button id="mobile-menu-btn" type="button" aria-label="Buka menu navigasi" aria-controls="mobile-menu" aria-expanded="false" class="text-gray-600 hover:text-primary focus:outline-none p-2">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
@@ -228,8 +254,8 @@
         </div>
 
         <!-- Mobile Menu (Hidden by default) -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 shadow-xl absolute w-full">
-            <div class="px-4 pt-2 pb-6 space-y-1 sm:px-3">
+        <div id="mobile-menu" aria-label="Menu navigasi mobile" class="hidden md:hidden bg-white border-t border-gray-100 shadow-xl absolute w-full">
+            <div id="mobile-navigation" class="px-4 pt-2 pb-6 space-y-1 sm:px-3">
                 <button onclick="navigate('beranda'); toggleMobileMenu()" class="block w-full text-left text-gray-800 hover:bg-blue-50 hover:text-primary px-4 py-3 rounded-md text-base font-medium">Beranda</button>
                 <button onclick="navigate('profil'); toggleMobileMenu()" class="block w-full text-left text-gray-800 hover:bg-blue-50 hover:text-primary px-4 py-3 rounded-md text-base font-medium">Profil</button>
                 <button onclick="navigate('artefak'); toggleMobileMenu()" class="block w-full text-left text-gray-800 hover:bg-blue-50 hover:text-primary px-4 py-3 rounded-md text-base font-medium">Artefak PPL</button>
@@ -1237,11 +1263,11 @@
 
             <!-- Filter Buttons (Removing 'Semua' and Numbers) -->
             <div class="flex flex-wrap justify-center gap-2 mb-12">
-                <button onclick="filterDocs('penerjunan', this)" class="filter-btn active bg-primary text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all shadow-md hover:shadow-lg">Penerjunan</button>
-                <button onclick="filterDocs('observasi', this)" class="filter-btn bg-white hover:bg-gray-100 text-gray-700 px-5 py-2.5 rounded-full text-sm font-semibold transition-all border border-gray-200">Observasi</button>
-                <button onclick="filterDocs('asistensi', this)" class="filter-btn bg-white hover:bg-gray-100 text-gray-700 px-5 py-2.5 rounded-full text-sm font-semibold transition-all border border-gray-200">Asistensi</button>
-                <button onclick="filterDocs('mengajar', this)" class="filter-btn bg-white hover:bg-gray-100 text-gray-700 px-5 py-2.5 rounded-full text-sm font-semibold transition-all border border-gray-200">Mengajar</button>
-                <button onclick="filterDocs('bimbingan', this)" class="filter-btn bg-white hover:bg-gray-100 text-gray-700 px-5 py-2.5 rounded-full text-sm font-semibold transition-all border border-gray-200">Bimbingan</button>
+                <button onclick="filterDocs('penerjunan', this)" type="button" aria-pressed="true" class="filter-btn active bg-primary text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all shadow-md hover:shadow-lg">Penerjunan</button>
+                <button onclick="filterDocs('observasi', this)" type="button" aria-pressed="false" class="filter-btn bg-white hover:bg-gray-100 text-gray-700 px-5 py-2.5 rounded-full text-sm font-semibold transition-all border border-gray-200">Observasi</button>
+                <button onclick="filterDocs('asistensi', this)" type="button" aria-pressed="false" class="filter-btn bg-white hover:bg-gray-100 text-gray-700 px-5 py-2.5 rounded-full text-sm font-semibold transition-all border border-gray-200">Asistensi</button>
+                <button onclick="filterDocs('mengajar', this)" type="button" aria-pressed="false" class="filter-btn bg-white hover:bg-gray-100 text-gray-700 px-5 py-2.5 rounded-full text-sm font-semibold transition-all border border-gray-200">Mengajar</button>
+                <button onclick="filterDocs('bimbingan', this)" type="button" aria-pressed="false" class="filter-btn bg-white hover:bg-gray-100 text-gray-700 px-5 py-2.5 rounded-full text-sm font-semibold transition-all border border-gray-200">Bimbingan</button>
             </div>
 
             <!-- Dokumentasi Grid -->
@@ -1380,7 +1406,7 @@
                 <!-- Kategori: Mengajar (Video) (Initially Hidden) -->
                 <div class="doc-card bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden hover-card flex flex-col" data-category="mengajar" style="display: none;">
                     <div class="relative w-full h-56 bg-gray-200">
-                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/watch?v=nnu0PO4sAtY" title=" Mengajar " frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/nnu0PO4sAtY" loading="lazy" title=" Mengajar " frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                     <div class="p-6 flex-1 flex flex-col">
                         <div class="flex items-center gap-2 mb-3">
@@ -1388,8 +1414,8 @@
                             <span class="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded">Video</span>
                         </div>
                             <!-- From Uiverse.io by elijahgummer --> 
-                             <a href="https://www.youtube.com/watch?v=nnu0PO4sAtY" target="_blank">                   
-                                 <button class="button-with-icon" href>
+                             <a href="https://www.youtube.com/watch?v=nnu0PO4sAtY" target="_blank" rel="noopener noreferrer" class="inline-flex">                   
+                                 <span class="button-with-icon">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 48 48"
@@ -1402,7 +1428,7 @@
                                 ></path>
                             </svg>
                             <span class="text">YOUTUBE</span>
-                            </button></a>
+                            </span></a>
                         <p class="text-gray-600 text-sm">Video dokumentasi pembelajaran terbimbing praktik . Penerapan modul ajar berbasis pemecahan masalah.</p>
                     </div>
                 </div>
@@ -1448,11 +1474,737 @@
             </div>
         </section>
 
+
+        <!-- ==================== E-PORTOFOLIO 1 (UTS) ==================== -->
+        <section id="artefak-semester-ii-uts" class="page-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-10">
+            <!-- Header halaman -->
+            <div class="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-slate-950 via-blue-950 to-blue-700 p-7 md:p-10 text-white shadow-xl">
+                <div class="absolute -right-12 -top-16 h-64 w-64 rounded-full bg-cyan-400/20 blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-24 left-1/3 h-64 w-64 rounded-full bg-blue-400/20 blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-3xl">
+                    <div class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold tracking-wide text-blue-100 backdrop-blur">
+                        <i class="fas fa-folder-open"></i> E-PORTOFOLIO PPG · SEMESTER II
+                    </div>
+                    <h1 class="mt-5 text-3xl font-extrabold leading-tight md:text-5xl">E-Portofolio 1 <span class="text-cyan-300">(UTS)</span></h1>
+                    <p class="mt-4 max-w-2xl text-sm leading-relaxed text-blue-100 md:text-base">
+                        Dokumentasi artefak pembelajaran yang memuat modul ajar/RPP, media pembelajaran, LKPD, dan instrumen asesmen. Setiap artefak dilengkapi pratinjau dokumen serta telaah awal.
+                    </p>
+                    <div class="mt-6 flex flex-wrap items-center gap-3 text-xs font-medium text-blue-100">
+                        <span class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-2"><i class="fas fa-file-alt"></i> 4 artefak</span>
+                        <span class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-2"><i class="fas fa-search"></i> 4 aspek analisis</span>
+                        <span class="inline-flex items-center gap-2 rounded-xl border border-amber-300/30 bg-amber-300/10 px-3 py-2 text-amber-100"><i class="fas fa-info-circle"></i> Analisis awal / dummy</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ringkasan artefak -->
+            <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                <div class="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+                    <div class="flex items-center justify-between"><span class="text-xs font-semibold uppercase tracking-wide text-slate-500">Modul Ajar</span><span class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600"><i class="fas fa-book-open"></i></span></div>
+                    <p class="mt-3 text-2xl font-extrabold text-slate-900">01</p><p class="mt-1 text-xs text-slate-500">Perencanaan pembelajaran</p>
+                </div>
+                <div class="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+                    <div class="flex items-center justify-between"><span class="text-xs font-semibold uppercase tracking-wide text-slate-500">Media</span><span class="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600"><i class="fas fa-photo-film"></i></span></div>
+                    <p class="mt-3 text-2xl font-extrabold text-slate-900">02</p><p class="mt-1 text-xs text-slate-500">Dukungan penyampaian materi</p>
+                </div>
+                <div class="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+                    <div class="flex items-center justify-between"><span class="text-xs font-semibold uppercase tracking-wide text-slate-500">LKPD</span><span class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50 text-violet-600"><i class="fas fa-file-pen"></i></span></div>
+                    <p class="mt-3 text-2xl font-extrabold text-slate-900">03</p><p class="mt-1 text-xs text-slate-500">Aktivitas dan hasil kerja murid</p>
+                </div>
+                <div class="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+                    <div class="flex items-center justify-between"><span class="text-xs font-semibold uppercase tracking-wide text-slate-500">Asesmen</span><span class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600"><i class="fas fa-clipboard-check"></i></span></div>
+                    <p class="mt-3 text-2xl font-extrabold text-slate-900">04</p><p class="mt-1 text-xs text-slate-500">Pengukuran ketercapaian tujuan</p>
+                </div>
+            </div>
+
+            <!-- Keterangan dummy -->
+            <div class="flex gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-900" role="note">
+                <i class="fas fa-lightbulb mt-0.5 text-amber-600"></i>
+                <div class="text-sm leading-relaxed">
+                    <p class="font-bold">Catatan telaah sementara</p>
+                    <p class="mt-1 text-amber-800">Analisis konteks, tujuan, kelebihan, dan kekurangan di bawah ini masih berupa <strong>contoh/dummy</strong> untuk menyiapkan tampilan portofolio. Isinya perlu disesuaikan kembali setelah dokumen ditelaah secara menyeluruh.</p>
+                </div>
+            </div>
+
+            <!-- Navigasi cepat artefak -->
+            <div class="flex flex-wrap gap-2" aria-label="Navigasi artefak UTS">
+                <a href="#uts-modul-ajar" class="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-xs font-semibold text-blue-700 transition hover:bg-blue-600 hover:text-white"><i class="fas fa-book-open mr-1.5"></i>Modul Ajar/RPP</a>
+                <a href="#uts-media" class="rounded-full border border-cyan-200 bg-cyan-50 px-4 py-2 text-xs font-semibold text-cyan-700 transition hover:bg-cyan-600 hover:text-white"><i class="fas fa-photo-film mr-1.5"></i>Media Pembelajaran</a>
+                <a href="#uts-lkpd" class="rounded-full border border-violet-200 bg-violet-50 px-4 py-2 text-xs font-semibold text-violet-700 transition hover:bg-violet-600 hover:text-white"><i class="fas fa-file-pen mr-1.5"></i>LKPD</a>
+                <a href="#uts-asesmen" class="rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-600 hover:text-white"><i class="fas fa-clipboard-check mr-1.5"></i>Instrumen Asesmen</a>
+            </div>
+
+            <div class="space-y-10">
+                <!-- ARTEFAK 1: MODUL AJAR / RPP -->
+                <article id="uts-modul-ajar" class="scroll-mt-28 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-lg">
+                    <div class="flex flex-col gap-3 bg-gradient-to-r from-slate-900 to-blue-950 px-6 py-5 text-white sm:flex-row sm:items-center sm:justify-between md:px-8">
+                        <div class="flex items-center gap-4"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-500 text-lg font-extrabold shadow-lg">01</span><div><p class="text-xs font-semibold uppercase tracking-[.16em] text-blue-200">Artefak pembelajaran</p><h2 class="mt-1 text-xl font-bold md:text-2xl">Modul Ajar / RPP</h2></div></div>
+                        <span class="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-blue-100">Perencanaan pembelajaran</span>
+                    </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12">
+                        <div class="bg-slate-100 p-3 sm:p-5 xl:col-span-5">
+                            <div class="mb-3 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-700"><i class="fas fa-eye mr-2 text-blue-600"></i>Pratinjau dokumen</p><span class="text-[11px] text-slate-500">Google Drive</span></div>
+                            <iframe title="Pratinjau Modul Ajar atau RPP" src="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/preview" class="h-[420px] w-full rounded-xl border border-slate-200 bg-white shadow-inner md:h-[520px]" loading="lazy" allow="autoplay"></iframe>
+                            <div class="mt-3 flex flex-col gap-2 sm:flex-row">
+                                <a href="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"><i class="fas fa-arrow-up-right-from-square"></i>Buka / Review</a>
+                                <a href="https://drive.google.com/uc?export=download&id=1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS" target="_blank" rel="noopener noreferrer" class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-blue-400 hover:text-blue-700"><i class="fas fa-download"></i>Unduh</a>
+                            </div>
+                        </div>
+                        <div class="space-y-5 p-5 md:p-7 xl:col-span-7">
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600"><i class="fas fa-bullseye"></i></span><h3 class="font-bold text-slate-900">Analisis Konteks</h3></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Modul ajar/RPP disiapkan sebagai panduan pelaksanaan pembelajaran. Penyusunannya perlu mempertimbangkan capaian pembelajaran, karakteristik dan kebutuhan murid, materi yang akan dipelajari, alokasi waktu, serta kondisi sarana dan prasarana pembelajaran.</p></div>
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600"><i class="fas fa-flag-checkered"></i></span><h3 class="font-bold text-slate-900">Tujuan</h3></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Menjadi acuan sistematis bagi guru dalam merancang kegiatan pendahuluan, inti, dan penutup; menyelaraskan tujuan, aktivitas, serta asesmen; dan memastikan proses pembelajaran berjalan terarah sesuai kebutuhan murid.</p></div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"><h3 class="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-800"><i class="fas fa-thumbs-up"></i>Kelebihan</h3><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-emerald-900"><li>Alur pembelajaran dapat dirancang lebih sistematis.</li><li>Tujuan, kegiatan, dan asesmen dapat diselaraskan.</li><li>Membantu guru menyiapkan kebutuhan pembelajaran sebelum mengajar.</li></ul></div>
+                                <div class="rounded-2xl border border-rose-100 bg-rose-50/70 p-4"><h3 class="mb-2 flex items-center gap-2 text-sm font-bold text-rose-800"><i class="fas fa-triangle-exclamation"></i>Kekurangan</h3><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-rose-900"><li>Perlu penyesuaian jika kondisi kelas berbeda dari rencana.</li><li>Penyusunan rinci membutuhkan waktu dan telaah.</li><li>Diferensiasi perlu diperjelas agar kebutuhan beragam murid terakomodasi.</li></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- ARTEFAK 2: MEDIA PEMBELAJARAN -->
+                <article id="uts-media" class="scroll-mt-28 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-lg">
+                    <div class="flex flex-col gap-3 bg-gradient-to-r from-slate-900 to-cyan-950 px-6 py-5 text-white sm:flex-row sm:items-center sm:justify-between md:px-8">
+                        <div class="flex items-center gap-4"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-cyan-500 text-lg font-extrabold shadow-lg">02</span><div><p class="text-xs font-semibold uppercase tracking-[.16em] text-cyan-200">Artefak pembelajaran</p><h2 class="mt-1 text-xl font-bold md:text-2xl">Media Pembelajaran</h2></div></div>
+                        <span class="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-cyan-100">Sumber dan penyajian materi</span>
+                    </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12">
+                        <div class="bg-slate-100 p-3 sm:p-5 xl:col-span-5">
+                            <div class="mb-3 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-700"><i class="fas fa-eye mr-2 text-cyan-600"></i>Pratinjau presentasi</p><span class="text-[11px] text-slate-500">Google Slides</span></div>
+                            <iframe title="Pratinjau Media Pembelajaran" src="https://docs.google.com/presentation/d/1TJZIH3s-CdkMxUoGbqzY5pK50U8wRHnf/preview" class="h-[420px] w-full rounded-xl border border-slate-200 bg-white shadow-inner md:h-[520px]" loading="lazy" allowfullscreen></iframe>
+                            <div class="mt-3 flex flex-col gap-2 sm:flex-row">
+                                <a href="https://docs.google.com/presentation/d/1TJZIH3s-CdkMxUoGbqzY5pK50U8wRHnf/edit?usp=drive_link" target="_blank" rel="noopener noreferrer" class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-cyan-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-cyan-700"><i class="fas fa-arrow-up-right-from-square"></i>Buka / Review</a>
+                                <a href="https://docs.google.com/presentation/d/1TJZIH3s-CdkMxUoGbqzY5pK50U8wRHnf/export/pptx" target="_blank" rel="noopener noreferrer" class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-cyan-400 hover:text-cyan-700"><i class="fas fa-download"></i>Unduh PPTX</a>
+                            </div>
+                        </div>
+                        <div class="space-y-5 p-5 md:p-7 xl:col-span-7">
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600"><i class="fas fa-bullseye"></i></span><h3 class="font-bold text-slate-900">Analisis Konteks</h3></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Media pembelajaran digunakan untuk membantu guru menyampaikan materi melalui representasi visual dan/atau audio. Pemilihan media perlu memperhatikan karakteristik murid, tujuan pembelajaran, jenis materi, ketersediaan perangkat, dan akses teknologi di kelas.</p></div>
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600"><i class="fas fa-flag-checkered"></i></span><h3 class="font-bold text-slate-900">Tujuan</h3></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Memperjelas penyampaian konsep, membantu murid memahami informasi secara bertahap, meningkatkan fokus dan keterlibatan, serta menyediakan pendukung visual agar materi lebih mudah dipelajari kembali.</p></div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"><h3 class="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-800"><i class="fas fa-thumbs-up"></i>Kelebihan</h3><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-emerald-900"><li>Informasi dapat disajikan lebih visual dan terstruktur.</li><li>Mendukung penjelasan konsep yang abstrak.</li><li>Materi dapat ditampilkan kembali saat diperlukan.</li></ul></div>
+                                <div class="rounded-2xl border border-rose-100 bg-rose-50/70 p-4"><h3 class="mb-2 flex items-center gap-2 text-sm font-bold text-rose-800"><i class="fas fa-triangle-exclamation"></i>Kekurangan</h3><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-rose-900"><li>Penggunaan dapat bergantung pada listrik dan perangkat.</li><li>Media yang terlalu padat berpotensi membebani perhatian murid.</li><li>Media perlu disertai interaksi, bukan hanya ditampilkan.</li></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- ARTEFAK 3: LKPD -->
+                <article id="uts-lkpd" class="scroll-mt-28 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-lg">
+                    <div class="flex flex-col gap-3 bg-gradient-to-r from-slate-900 to-violet-950 px-6 py-5 text-white sm:flex-row sm:items-center sm:justify-between md:px-8">
+                        <div class="flex items-center gap-4"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-violet-500 text-lg font-extrabold shadow-lg">03</span><div><p class="text-xs font-semibold uppercase tracking-[.16em] text-violet-200">Artefak pembelajaran</p><h2 class="mt-1 text-xl font-bold md:text-2xl">Lembar Kerja Peserta Didik (LKPD)</h2></div></div>
+                        <span class="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-violet-100">Aktivitas belajar murid</span>
+                    </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12">
+                        <div class="bg-slate-100 p-3 sm:p-5 xl:col-span-5">
+                            <div class="mb-3 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-700"><i class="fas fa-eye mr-2 text-violet-600"></i>Pratinjau dokumen</p><span class="text-[11px] text-slate-500">Google Drive</span></div>
+                            <iframe title="Pratinjau LKPD" src="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/preview" class="h-[420px] w-full rounded-xl border border-slate-200 bg-white shadow-inner md:h-[520px]" loading="lazy" allow="autoplay"></iframe>
+                            <div class="mt-3 flex flex-col gap-2 sm:flex-row">
+                                <a href="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-700"><i class="fas fa-arrow-up-right-from-square"></i>Buka / Review</a>
+                                <a href="https://drive.google.com/uc?export=download&id=1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS" target="_blank" rel="noopener noreferrer" class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-violet-400 hover:text-violet-700"><i class="fas fa-download"></i>Unduh</a>
+                            </div>
+                        </div>
+                        <div class="space-y-5 p-5 md:p-7 xl:col-span-7">
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-50 text-violet-600"><i class="fas fa-bullseye"></i></span><h3 class="font-bold text-slate-900">Analisis Konteks</h3></div><p class="text-sm leading-relaxed text-slate-600">Dummy: LKPD digunakan sebagai panduan aktivitas belajar yang dikerjakan murid secara individu maupun kelompok. Isi dan tingkat kesulitan LKPD perlu disesuaikan dengan tujuan pembelajaran, kemampuan awal murid, waktu yang tersedia, serta situasi pembelajaran.</p></div>
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-50 text-violet-600"><i class="fas fa-flag-checkered"></i></span><h3 class="font-bold text-slate-900">Tujuan</h3></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Memberikan arahan kegiatan dan tahapan pengerjaan, mendorong murid mengeksplorasi materi serta memecahkan masalah, dan menghasilkan bukti atau produk belajar yang dapat didiskusikan maupun dinilai.</p></div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"><h3 class="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-800"><i class="fas fa-thumbs-up"></i>Kelebihan</h3><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-emerald-900"><li>Aktivitas dan instruksi belajar lebih terarah.</li><li>Mendorong partisipasi, diskusi, dan eksplorasi murid.</li><li>Hasil kerja dapat menjadi bahan umpan balik dan refleksi.</li></ul></div>
+                                <div class="rounded-2xl border border-rose-100 bg-rose-50/70 p-4"><h3 class="mb-2 flex items-center gap-2 text-sm font-bold text-rose-800"><i class="fas fa-triangle-exclamation"></i>Kekurangan</h3><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-rose-900"><li>Instruksi yang kurang jelas dapat menimbulkan salah tafsir.</li><li>Waktu pengerjaan perlu disesuaikan dengan beban tugas.</li><li>Perlu variasi atau scaffolding untuk kemampuan murid yang beragam.</li></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- ARTEFAK 4: INSTRUMEN ASESMEN -->
+                <article id="uts-asesmen" class="scroll-mt-28 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-lg">
+                    <div class="flex flex-col gap-3 bg-gradient-to-r from-slate-900 to-emerald-950 px-6 py-5 text-white sm:flex-row sm:items-center sm:justify-between md:px-8">
+                        <div class="flex items-center gap-4"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-500 text-lg font-extrabold shadow-lg">04</span><div><p class="text-xs font-semibold uppercase tracking-[.16em] text-emerald-200">Artefak pembelajaran</p><h2 class="mt-1 text-xl font-bold md:text-2xl">Instrumen Asesmen</h2></div></div>
+                        <span class="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-emerald-100">Evaluasi pembelajaran</span>
+                    </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12">
+                        <div class="bg-slate-100 p-3 sm:p-5 xl:col-span-5">
+                            <div class="mb-3 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-700"><i class="fas fa-eye mr-2 text-emerald-600"></i>Pratinjau dokumen</p><span class="text-[11px] text-slate-500">Google Drive</span></div>
+                            <iframe title="Pratinjau Instrumen Asesmen" src="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/preview" class="h-[420px] w-full rounded-xl border border-slate-200 bg-white shadow-inner md:h-[520px]" loading="lazy" allow="autoplay"></iframe>
+                            <div class="mt-3 flex flex-col gap-2 sm:flex-row">
+                                <a href="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"><i class="fas fa-arrow-up-right-from-square"></i>Buka / Review</a>
+                                <a href="https://drive.google.com/uc?export=download&id=1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS" target="_blank" rel="noopener noreferrer" class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-400 hover:text-emerald-700"><i class="fas fa-download"></i>Unduh</a>
+                            </div>
+                        </div>
+                        <div class="space-y-5 p-5 md:p-7 xl:col-span-7">
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600"><i class="fas fa-bullseye"></i></span><h3 class="font-bold text-slate-900">Analisis Konteks</h3></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Instrumen asesmen digunakan untuk memperoleh informasi tentang proses dan hasil belajar murid. Penyusunannya perlu mengacu pada tujuan atau indikator yang diukur, jenis kompetensi, karakteristik murid, serta bentuk bukti belajar yang relevan.</p></div>
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600"><i class="fas fa-flag-checkered"></i></span><h3 class="font-bold text-slate-900">Tujuan</h3></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Mengumpulkan bukti ketercapaian tujuan pembelajaran, mengidentifikasi pemahaman maupun kesulitan murid, dan menyediakan dasar bagi guru untuk memberikan umpan balik serta menentukan tindak lanjut pembelajaran.</p></div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"><h3 class="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-800"><i class="fas fa-thumbs-up"></i>Kelebihan</h3><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-emerald-900"><li>Pengumpulan bukti belajar menjadi lebih terarah.</li><li>Hasil asesmen dapat membantu memetakan pemahaman murid.</li><li>Menjadi dasar pemberian umpan balik dan tindak lanjut.</li></ul></div>
+                                <div class="rounded-2xl border border-rose-100 bg-rose-50/70 p-4"><h3 class="mb-2 flex items-center gap-2 text-sm font-bold text-rose-800"><i class="fas fa-triangle-exclamation"></i>Kekurangan</h3><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-rose-900"><li>Butir dan rubrik perlu ditelaah agar sesuai indikator.</li><li>Penilaian dapat kurang menyeluruh jika hanya memakai satu bentuk tes.</li><li>Konsistensi penilaian perlu dijaga, khususnya pada tugas kinerja.</li></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-600 shadow-sm md:flex md:items-center md:justify-between md:gap-6">
+                <div><p class="font-bold text-slate-900">Catatan pengembangan berikutnya</p><p class="mt-1 leading-relaxed">Setelah dokumen final ditelaah, ganti seluruh keterangan dummy dengan hasil analisis yang spesifik dan sesuai isi artefak.</p></div>
+                <a href="#artefak-semester-ii-uts" class="mt-3 inline-flex shrink-0 items-center gap-2 font-semibold text-blue-700 hover:text-blue-900 md:mt-0">Kembali ke atas <i class="fas fa-arrow-up"></i></a>
+            </div>
+        </section>
+        <!-- ==================== E-PORTOFOLIO 2 (UAS) ==================== -->
+        <section id="artefak-semester-ii-uas" class="page-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4 space-y-10">
+            <div id="uas-top" class="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-slate-950 via-indigo-950 to-violet-800 p-7 text-white shadow-xl md:p-10">
+                <div class="pointer-events-none absolute -right-12 -top-16 h-64 w-64 rounded-full bg-fuchsia-400/20 blur-3xl"></div>
+                <div class="pointer-events-none absolute -bottom-24 left-1/3 h-64 w-64 rounded-full bg-cyan-400/20 blur-3xl"></div>
+                <div class="relative z-10 max-w-4xl">
+                    <div class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold tracking-wide text-violet-100 backdrop-blur"><i class="fas fa-folder-open"></i>E-PORTOFOLIO PPG · SEMESTER II</div>
+                    <h1 class="mt-5 text-3xl font-extrabold leading-tight md:text-5xl">E-Portofolio 2 <span class="text-fuchsia-300">(UAS)</span></h1>
+                    <p class="mt-4 max-w-3xl text-sm leading-relaxed text-indigo-100 md:text-base">Dokumentasi artefak pembelajaran untuk Siklus 2, Siklus 3, dan Siklus 4. Setiap siklus memuat Modul Ajar/RPP, Media Pembelajaran, LKPD, serta Instrumen Asesmen yang dilengkapi pratinjau, tautan review, unduhan, dan analisis awal.</p>
+                    <div class="mt-6 flex flex-wrap gap-3 text-xs font-medium text-indigo-100">
+                        <span class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-2"><i class="fas fa-layer-group"></i>3 siklus</span>
+                        <span class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-3 py-2"><i class="fas fa-file-lines"></i>12 artefak</span>
+                        <span class="inline-flex items-center gap-2 rounded-xl border border-amber-300/30 bg-amber-300/10 px-3 py-2 text-amber-100"><i class="fas fa-info-circle"></i>Analisis dummy</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <a href="#uas-siklus-2" class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg"><div class="flex items-center justify-between"><span class="text-xs font-bold uppercase tracking-wider text-blue-600">Bagian 01</span><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white"><i class="fas fa-arrow-down"></i></span></div><h2 class="mt-4 text-xl font-extrabold text-slate-900">Siklus 2</h2><p class="mt-1 text-sm text-slate-500">4 artefak pembelajaran</p></a>
+                <a href="#uas-siklus-3" class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-cyan-300 hover:shadow-lg"><div class="flex items-center justify-between"><span class="text-xs font-bold uppercase tracking-wider text-cyan-600">Bagian 02</span><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600 group-hover:bg-cyan-600 group-hover:text-white"><i class="fas fa-arrow-down"></i></span></div><h2 class="mt-4 text-xl font-extrabold text-slate-900">Siklus 3</h2><p class="mt-1 text-sm text-slate-500">4 artefak pembelajaran</p></a>
+                <a href="#uas-siklus-4" class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-violet-300 hover:shadow-lg"><div class="flex items-center justify-between"><span class="text-xs font-bold uppercase tracking-wider text-violet-600">Bagian 03</span><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 text-violet-600 group-hover:bg-violet-600 group-hover:text-white"><i class="fas fa-arrow-down"></i></span></div><h2 class="mt-4 text-xl font-extrabold text-slate-900">Siklus 4</h2><p class="mt-1 text-sm text-slate-500">4 artefak pembelajaran</p></a>
+            </div>
+
+            <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4 md:p-5" role="note">
+                <div class="flex items-start gap-3"><i class="fas fa-circle-info mt-0.5 text-lg text-amber-600"></i><div class="space-y-1 text-sm leading-relaxed text-amber-950"><p class="font-bold">Catatan penting sebelum telaah final</p><p>Seluruh analisis konteks, tujuan, kelebihan, dan kekurangan masih berupa <strong>dummy/contoh awal</strong>, bukan hasil pemeriksaan isi dokumen. Selain itu, berdasarkan tautan yang diberikan, Modul Ajar/RPP, LKPD, dan Instrumen Asesmen saat ini memakai ID Google Drive yang sama. Tautan tersebut tetap dipasang sesuai input dan perlu diganti apabila file masing-masing artefak atau siklus berbeda.</p><p>Pastikan izin berbagi file diatur agar dapat dilihat oleh pengguna yang membuka portofolio. Jika pratinjau tidak tampil, gunakan tombol Buka / Review.</p></div></div>
+            </div>
+
+            <section id="uas-siklus-2" class="scroll-mt-28 space-y-6">
+                <div class="flex flex-col gap-4 rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm md:flex-row md:items-center md:justify-between md:p-7">
+                    <div class="flex items-center gap-4">
+                        <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-xl font-extrabold text-white shadow-lg">2</div>
+                        <div><p class="text-xs font-bold uppercase tracking-[.16em] text-blue-600">E-Portofolio 2 · UAS</p><h2 class="mt-1 text-2xl font-extrabold text-slate-900">Siklus 2</h2><p class="mt-1 text-sm text-slate-500">Pendalaman dan penerapan rancangan pembelajaran</p></div>
+                    </div>
+                    <a href="#uas-top" class="inline-flex items-center gap-2 text-sm font-semibold text-blue-700 transition hover:text-blue-900">Kembali ke navigasi <i class="fas fa-arrow-up"></i></a>
+                </div>
+                <nav class="flex flex-wrap gap-2" aria-label="Navigasi artefak Siklus 2"><a href="#uas-s2-modul" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-700"><i class="fas fa-book-open"></i>Modul Ajar/RPP</a><a href="#uas-s2-media" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-700"><i class="fas fa-photo-film"></i>Media Pembelajaran</a><a href="#uas-s2-lkpd" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-700"><i class="fas fa-file-pen"></i>LKPD</a><a href="#uas-s2-asesmen" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-700"><i class="fas fa-clipboard-check"></i>Instrumen Asesmen</a></nav>
+                <div class="space-y-8">                <article id="uas-s2-modul" class="scroll-mt-28 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-lg transition-shadow hover:shadow-xl">
+                    <div class="flex flex-col gap-3 bg-gradient-to-r from-slate-900 to-blue-950 px-6 py-5 text-white sm:flex-row sm:items-center sm:justify-between md:px-8">
+                        <div class="flex items-center gap-4"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-500 text-lg font-extrabold shadow-lg">01</span><div><p class="text-xs font-semibold uppercase tracking-[.16em] text-blue-200">Artefak · Siklus 2</p><h3 class="mt-1 text-xl font-bold md:text-2xl">Modul Ajar / RPP</h3></div></div>
+                        <span class="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90">Perencanaan pembelajaran</span>
+                    </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12">
+                        <div class="bg-slate-100 p-3 sm:p-5 xl:col-span-5">
+                            <div class="mb-3 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-700"><i class="fas fa-eye mr-2 text-blue-600"></i>Pratinjau dokumen</p><span class="text-[11px] text-slate-500">Google Drive</span></div>
+                            <iframe title="Modul Ajar / RPP Siklus 2" src="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/preview" class="h-[390px] w-full rounded-xl border border-slate-200 bg-white shadow-inner md:h-[470px]" loading="lazy" allow="autoplay"></iframe>
+                            <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <a href="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition"><i class="fas fa-arrow-up-right-from-square"></i>Buka / Review</a>
+                                <a href="https://drive.google.com/uc?export=download&id=1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-blue-400 hover:text-blue-700"><i class="fas fa-download"></i>Unduh</a>
+                            </div>
+                            <p class="mt-2 text-[11px] leading-relaxed text-slate-500"><i class="fas fa-circle-info mr-1"></i>Pratinjau dan unduhan mengikuti izin akses file Google Drive/Slides.</p>
+                        </div>
+                        <div class="space-y-5 p-5 md:p-7 xl:col-span-7">
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600"><i class="fas fa-bullseye"></i></span><h4 class="font-bold text-slate-900">Analisis Konteks</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy Siklus 2: Modul ajar/RPP menjadi rancangan utama pelaksanaan pembelajaran pada siklus 2. Analisis konteks perlu memperhatikan capaian dan tujuan pembelajaran, karakteristik serta kebutuhan murid, materi, alokasi waktu, sarana-prasarana, dan hasil refleksi pembelajaran sebelumnya.</p></div>
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600"><i class="fas fa-flag-checkered"></i></span><h4 class="font-bold text-slate-900">Tujuan</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Menjadi acuan guru dalam mengatur alur pendahuluan, inti, dan penutup; menyelaraskan tujuan, aktivitas, serta asesmen; dan membantu pembelajaran berlangsung terarah sekaligus tetap adaptif terhadap kondisi kelas.</p></div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-800"><i class="fas fa-thumbs-up"></i>Kelebihan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-emerald-900"><li>Alur dan alokasi pembelajaran dapat dirancang lebih sistematis.</li><li>Keterkaitan tujuan, aktivitas, dan asesmen lebih mudah diperiksa.</li><li>Membantu guru menyiapkan kebutuhan pembelajaran sebelum mengajar.</li></ul></div>
+                                <div class="rounded-2xl border border-rose-100 bg-rose-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-rose-800"><i class="fas fa-triangle-exclamation"></i>Kekurangan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-rose-900"><li>Rencana perlu disesuaikan ketika kondisi kelas berubah.</li><li>Penyusunan yang rinci membutuhkan waktu dan telaah.</li><li>Strategi diferensiasi perlu ditulis secara operasional agar mudah diterapkan.</li></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article id="uas-s2-media" class="scroll-mt-28 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-lg transition-shadow hover:shadow-xl">
+                    <div class="flex flex-col gap-3 bg-gradient-to-r from-slate-900 to-cyan-950 px-6 py-5 text-white sm:flex-row sm:items-center sm:justify-between md:px-8">
+                        <div class="flex items-center gap-4"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-cyan-500 text-lg font-extrabold shadow-lg">02</span><div><p class="text-xs font-semibold uppercase tracking-[.16em] text-cyan-200">Artefak · Siklus 2</p><h3 class="mt-1 text-xl font-bold md:text-2xl">Media Pembelajaran</h3></div></div>
+                        <span class="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90">Sumber dan penyajian materi</span>
+                    </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12">
+                        <div class="bg-slate-100 p-3 sm:p-5 xl:col-span-5">
+                            <div class="mb-3 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-700"><i class="fas fa-eye mr-2 text-cyan-600"></i>Pratinjau presentasi</p><span class="text-[11px] text-slate-500">Google Slides</span></div>
+                            <iframe title="Media Pembelajaran Siklus 2" src="https://docs.google.com/presentation/d/1TJZIH3s-CdkMxUoGbqzY5pK50U8wRHnf/preview" class="h-[390px] w-full rounded-xl border border-slate-200 bg-white shadow-inner md:h-[470px]" loading="lazy" allowfullscreen></iframe>
+                            <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <a href="https://docs.google.com/presentation/d/1TJZIH3s-CdkMxUoGbqzY5pK50U8wRHnf/edit?usp=drive_link" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition"><i class="fas fa-arrow-up-right-from-square"></i>Buka / Review</a>
+                                <a href="https://docs.google.com/presentation/d/1TJZIH3s-CdkMxUoGbqzY5pK50U8wRHnf/export/pptx" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-cyan-400 hover:text-cyan-700"><i class="fas fa-download"></i>Unduh PPTX</a>
+                            </div>
+                            <p class="mt-2 text-[11px] leading-relaxed text-slate-500"><i class="fas fa-circle-info mr-1"></i>Pratinjau dan unduhan mengikuti izin akses file Google Drive/Slides.</p>
+                        </div>
+                        <div class="space-y-5 p-5 md:p-7 xl:col-span-7">
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600"><i class="fas fa-bullseye"></i></span><h4 class="font-bold text-slate-900">Analisis Konteks</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy Siklus 2: Media pembelajaran dipilih untuk membantu penyampaian materi pada siklus 2. Kesesuaiannya perlu ditinjau dari tujuan pembelajaran, karakteristik murid, bentuk materi, kemudahan penggunaan, ketersediaan perangkat, dan akses jaringan.</p></div>
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600"><i class="fas fa-flag-checkered"></i></span><h4 class="font-bold text-slate-900">Tujuan</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Memperjelas konsep dan informasi, menyajikan materi secara lebih terstruktur, menjaga perhatian murid, serta menyediakan representasi yang dapat membantu murid mempelajari kembali materi.</p></div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-800"><i class="fas fa-thumbs-up"></i>Kelebihan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-emerald-900"><li>Membantu memvisualisasikan atau menjelaskan materi.</li><li>Dapat meningkatkan fokus dan keterlibatan apabila digunakan secara tepat.</li><li>Materi dapat ditampilkan secara konsisten dan dipelajari kembali.</li></ul></div>
+                                <div class="rounded-2xl border border-rose-100 bg-rose-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-rose-800"><i class="fas fa-triangle-exclamation"></i>Kekurangan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-rose-900"><li>Efektivitasnya bergantung pada kesesuaian dengan tujuan dan materi.</li><li>Penggunaan perangkat atau jaringan dapat menjadi kendala.</li><li>Media yang terlalu padat dapat mengalihkan perhatian dari inti materi.</li></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                
+    <section class="border-t border-slate-200 bg-gradient-to-b from-white to-slate-50 p-4 sm:p-6 md:p-7" aria-label="Pratinjau media ajar web Siklus 2">
+        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+                <p class="text-[10px] font-bold uppercase tracking-[.18em] text-cyan-600">Pengembangan media digital · Siklus 2</p>
+                <h4 class="mt-1 flex items-center gap-2 text-lg font-extrabold text-slate-900 sm:text-xl"><i class="fas fa-laptop-code text-cyan-600"></i>Preview Media Ajar Berbasis Web</h4>
+                <p class="mt-1 max-w-3xl text-xs leading-relaxed text-slate-500">Media pembelajaran interaktif yang dikembangkan untuk mendukung penyampaian materi. Pratinjau ditampilkan langsung di bawah ini dan dapat dibuka pada tab baru.</p>
+            </div>
+            <span class="w-fit rounded-full border border-cyan-100 bg-cyan-50 px-3 py-1.5 text-[11px] font-semibold text-cyan-700">1 media</span>
+        </div>
+        <div class="grid grid-cols-1 gap-5">
+            <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+        <div class="flex flex-col gap-3 border-b border-slate-100 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+            <div class="flex min-w-0 items-start gap-3">
+                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600"><i class="fas fa-chart-column text-lg"></i></span>
+                <div class="min-w-0">
+                    <p class="text-[10px] font-bold uppercase tracking-[.16em] text-cyan-600">Media ajar berbasis web</p>
+                    <h4 class="mt-1 text-base font-extrabold text-slate-900 sm:text-lg">Analisis Data untuk DKV</h4>
+                    <p class="mt-0.5 text-xs text-slate-500">Kelas X DKV 1 · Vercel</p>
+                </div>
+            </div>
+            <a href="https://analis-data-xdkv.vercel.app/" target="_blank" rel="noopener noreferrer" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-cyan-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2">
+                <i class="fas fa-arrow-up-right-from-square"></i>Buka halaman
+            </a>
+        </div>
+        <div class="bg-slate-100 p-2 sm:p-3">
+            <div class="mb-2 flex flex-wrap items-center justify-between gap-2 px-1">
+                <span class="text-xs font-semibold text-slate-600"><i class="fas fa-display mr-1.5 text-cyan-600"></i>Pratinjau langsung</span>
+                <span class="rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold text-slate-500">Website eksternal</span>
+            </div>
+            <iframe
+                title="Pratinjau Analisis Data untuk DKV"
+                src="https://analis-data-xdkv.vercel.app/"
+                class="h-[480px] w-full rounded-xl border border-slate-200 bg-white shadow-inner sm:h-[560px] xl:h-[620px]"
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allow="fullscreen"
+                allowfullscreen>
+            </iframe>
+            <p class="px-1 pt-2 text-[11px] leading-relaxed text-slate-500"><i class="fas fa-circle-info mr-1"></i>Jika pratinjau tidak tampil karena kebijakan penyematan dari situs tujuan, gunakan tombol <strong>Buka halaman</strong> untuk melihat media secara langsung.</p>
+        </div>
+        <div class="p-4 sm:p-5">
+            <p class="text-sm leading-relaxed text-slate-600">Media ajar ini mengaitkan analisis data dengan pekerjaan desain, seperti data proyek, rating klien, biaya produksi, vendor cetak, dan media sosial. Materi juga mencakup pengenalan spreadsheet, rumus aritmatika, AVERAGE, MAX/MIN, IF, studi kasus, serta kuis interaktif.</p>
+            <div class="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3">
+                <span class="text-[11px] font-medium text-slate-400"><i class="fas fa-link mr-1"></i>Kelas X DKV 1 · Vercel</span>
+                <a href="https://analis-data-xdkv.vercel.app/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-bold text-cyan-700 transition hover:text-cyan-900">Lihat halaman penuh <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </article>
+        </div>
+    </section>
+                </article>
+                <article id="uas-s2-lkpd" class="scroll-mt-28 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-lg transition-shadow hover:shadow-xl">
+                    <div class="flex flex-col gap-3 bg-gradient-to-r from-slate-900 to-violet-950 px-6 py-5 text-white sm:flex-row sm:items-center sm:justify-between md:px-8">
+                        <div class="flex items-center gap-4"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-violet-500 text-lg font-extrabold shadow-lg">03</span><div><p class="text-xs font-semibold uppercase tracking-[.16em] text-violet-200">Artefak · Siklus 2</p><h3 class="mt-1 text-xl font-bold md:text-2xl">Lembar Kerja Peserta Didik (LKPD)</h3></div></div>
+                        <span class="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90">Aktivitas dan hasil kerja murid</span>
+                    </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12">
+                        <div class="bg-slate-100 p-3 sm:p-5 xl:col-span-5">
+                            <div class="mb-3 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-700"><i class="fas fa-eye mr-2 text-violet-600"></i>Pratinjau dokumen</p><span class="text-[11px] text-slate-500">Google Drive</span></div>
+                            <iframe title="Lembar Kerja Peserta Didik (LKPD) Siklus 2" src="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/preview" class="h-[390px] w-full rounded-xl border border-slate-200 bg-white shadow-inner md:h-[470px]" loading="lazy" allow="autoplay"></iframe>
+                            <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <a href="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 hover:bg-violet-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition"><i class="fas fa-arrow-up-right-from-square"></i>Buka / Review</a>
+                                <a href="https://drive.google.com/uc?export=download&id=1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-violet-400 hover:text-violet-700"><i class="fas fa-download"></i>Unduh</a>
+                            </div>
+                            <p class="mt-2 text-[11px] leading-relaxed text-slate-500"><i class="fas fa-circle-info mr-1"></i>Pratinjau dan unduhan mengikuti izin akses file Google Drive/Slides.</p>
+                        </div>
+                        <div class="space-y-5 p-5 md:p-7 xl:col-span-7">
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-50 text-violet-600"><i class="fas fa-bullseye"></i></span><h4 class="font-bold text-slate-900">Analisis Konteks</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy Siklus 2: LKPD menjadi panduan aktivitas belajar murid pada siklus 2, baik secara individu maupun kelompok. Konteks penyusunannya perlu mempertimbangkan tujuan, kemampuan awal murid, tingkat kompleksitas tugas, waktu pengerjaan, dan situasi kelas.</p></div>
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-50 text-violet-600"><i class="fas fa-flag-checkered"></i></span><h4 class="font-bold text-slate-900">Tujuan</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Memberikan instruksi dan tahapan aktivitas yang jelas, mengarahkan murid mengeksplorasi materi atau memecahkan masalah, serta menghasilkan bukti kerja untuk didiskusikan dan diberi umpan balik.</p></div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-800"><i class="fas fa-thumbs-up"></i>Kelebihan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-emerald-900"><li>Instruksi dan hasil kerja yang diharapkan lebih terarah.</li><li>Mendukung aktivitas eksplorasi, diskusi, dan pemecahan masalah.</li><li>Hasil pengerjaan dapat menjadi bahan umpan balik dan refleksi.</li></ul></div>
+                                <div class="rounded-2xl border border-rose-100 bg-rose-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-rose-800"><i class="fas fa-triangle-exclamation"></i>Kekurangan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-rose-900"><li>Instruksi yang kurang spesifik dapat menimbulkan salah tafsir.</li><li>Waktu pengerjaan perlu sebanding dengan beban dan tingkat kesulitan tugas.</li><li>Perlu dukungan atau variasi aktivitas untuk mengakomodasi kemampuan murid yang beragam.</li></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article id="uas-s2-asesmen" class="scroll-mt-28 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-lg transition-shadow hover:shadow-xl">
+                    <div class="flex flex-col gap-3 bg-gradient-to-r from-slate-900 to-emerald-950 px-6 py-5 text-white sm:flex-row sm:items-center sm:justify-between md:px-8">
+                        <div class="flex items-center gap-4"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-500 text-lg font-extrabold shadow-lg">04</span><div><p class="text-xs font-semibold uppercase tracking-[.16em] text-emerald-200">Artefak · Siklus 2</p><h3 class="mt-1 text-xl font-bold md:text-2xl">Instrumen Asesmen</h3></div></div>
+                        <span class="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90">Pengukuran ketercapaian tujuan</span>
+                    </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12">
+                        <div class="bg-slate-100 p-3 sm:p-5 xl:col-span-5">
+                            <div class="mb-3 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-700"><i class="fas fa-eye mr-2 text-emerald-600"></i>Pratinjau dokumen</p><span class="text-[11px] text-slate-500">Google Drive</span></div>
+                            <iframe title="Instrumen Asesmen Siklus 2" src="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/preview" class="h-[390px] w-full rounded-xl border border-slate-200 bg-white shadow-inner md:h-[470px]" loading="lazy" allow="autoplay"></iframe>
+                            <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <a href="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition"><i class="fas fa-arrow-up-right-from-square"></i>Buka / Review</a>
+                                <a href="https://drive.google.com/uc?export=download&id=1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-400 hover:text-emerald-700"><i class="fas fa-download"></i>Unduh</a>
+                            </div>
+                            <p class="mt-2 text-[11px] leading-relaxed text-slate-500"><i class="fas fa-circle-info mr-1"></i>Pratinjau dan unduhan mengikuti izin akses file Google Drive/Slides.</p>
+                        </div>
+                        <div class="space-y-5 p-5 md:p-7 xl:col-span-7">
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600"><i class="fas fa-bullseye"></i></span><h4 class="font-bold text-slate-900">Analisis Konteks</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy Siklus 2: Instrumen asesmen digunakan untuk memperoleh bukti proses dan hasil belajar pada siklus 2. Analisis konteks perlu melihat keselarasan instrumen dengan tujuan/indikator, kompetensi yang diukur, karakteristik murid, serta bentuk bukti belajar yang diharapkan.</p></div>
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600"><i class="fas fa-flag-checkered"></i></span><h4 class="font-bold text-slate-900">Tujuan</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Mengumpulkan bukti ketercapaian tujuan pembelajaran, mengenali pemahaman dan kesulitan murid, serta menjadi dasar pemberian umpan balik dan penentuan tindak lanjut pembelajaran.</p></div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-800"><i class="fas fa-thumbs-up"></i>Kelebihan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-emerald-900"><li>Pengumpulan bukti belajar menjadi lebih terarah.</li><li>Membantu guru memetakan pemahaman dan kebutuhan belajar murid.</li><li>Dapat menjadi dasar umpan balik, remedial, atau pengayaan.</li></ul></div>
+                                <div class="rounded-2xl border border-rose-100 bg-rose-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-rose-800"><i class="fas fa-triangle-exclamation"></i>Kekurangan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-rose-900"><li>Butir soal dan rubrik perlu ditelaah agar valid terhadap indikator.</li><li>Satu bentuk asesmen belum tentu mewakili seluruh kompetensi.</li><li>Konsistensi penilaian perlu dijaga, terutama pada tugas kinerja atau produk.</li></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                </div>
+            </section>            <section id="uas-siklus-3" class="scroll-mt-28 space-y-6">
+                <div class="flex flex-col gap-4 rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm md:flex-row md:items-center md:justify-between md:p-7">
+                    <div class="flex items-center gap-4">
+                        <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-xl font-extrabold text-white shadow-lg">3</div>
+                        <div><p class="text-xs font-bold uppercase tracking-[.16em] text-blue-600">E-Portofolio 2 · UAS</p><h2 class="mt-1 text-2xl font-extrabold text-slate-900">Siklus 3</h2><p class="mt-1 text-sm text-slate-500">Penguatan pelaksanaan dan refleksi pembelajaran</p></div>
+                    </div>
+                    <a href="#uas-top" class="inline-flex items-center gap-2 text-sm font-semibold text-blue-700 transition hover:text-blue-900">Kembali ke navigasi <i class="fas fa-arrow-up"></i></a>
+                </div>
+                <nav class="flex flex-wrap gap-2" aria-label="Navigasi artefak Siklus 3"><a href="#uas-s3-modul" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-700"><i class="fas fa-book-open"></i>Modul Ajar/RPP</a><a href="#uas-s3-media" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-700"><i class="fas fa-photo-film"></i>Media Pembelajaran</a><a href="#uas-s3-lkpd" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-700"><i class="fas fa-file-pen"></i>LKPD</a><a href="#uas-s3-asesmen" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-700"><i class="fas fa-clipboard-check"></i>Instrumen Asesmen</a></nav>
+                <div class="space-y-8">                <article id="uas-s3-modul" class="scroll-mt-28 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-lg transition-shadow hover:shadow-xl">
+                    <div class="flex flex-col gap-3 bg-gradient-to-r from-slate-900 to-blue-950 px-6 py-5 text-white sm:flex-row sm:items-center sm:justify-between md:px-8">
+                        <div class="flex items-center gap-4"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-500 text-lg font-extrabold shadow-lg">01</span><div><p class="text-xs font-semibold uppercase tracking-[.16em] text-blue-200">Artefak · Siklus 3</p><h3 class="mt-1 text-xl font-bold md:text-2xl">Modul Ajar / RPP</h3></div></div>
+                        <span class="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90">Perencanaan pembelajaran</span>
+                    </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12">
+                        <div class="bg-slate-100 p-3 sm:p-5 xl:col-span-5">
+                            <div class="mb-3 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-700"><i class="fas fa-eye mr-2 text-blue-600"></i>Pratinjau dokumen</p><span class="text-[11px] text-slate-500">Google Drive</span></div>
+                            <iframe title="Modul Ajar / RPP Siklus 3" src="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/preview" class="h-[390px] w-full rounded-xl border border-slate-200 bg-white shadow-inner md:h-[470px]" loading="lazy" allow="autoplay"></iframe>
+                            <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <a href="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition"><i class="fas fa-arrow-up-right-from-square"></i>Buka / Review</a>
+                                <a href="https://drive.google.com/uc?export=download&id=1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-blue-400 hover:text-blue-700"><i class="fas fa-download"></i>Unduh</a>
+                            </div>
+                            <p class="mt-2 text-[11px] leading-relaxed text-slate-500"><i class="fas fa-circle-info mr-1"></i>Pratinjau dan unduhan mengikuti izin akses file Google Drive/Slides.</p>
+                        </div>
+                        <div class="space-y-5 p-5 md:p-7 xl:col-span-7">
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600"><i class="fas fa-bullseye"></i></span><h4 class="font-bold text-slate-900">Analisis Konteks</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy Siklus 3: Modul ajar/RPP menjadi rancangan utama pelaksanaan pembelajaran pada siklus 3. Analisis konteks perlu memperhatikan capaian dan tujuan pembelajaran, karakteristik serta kebutuhan murid, materi, alokasi waktu, sarana-prasarana, dan hasil refleksi pembelajaran sebelumnya.</p></div>
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600"><i class="fas fa-flag-checkered"></i></span><h4 class="font-bold text-slate-900">Tujuan</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Menjadi acuan guru dalam mengatur alur pendahuluan, inti, dan penutup; menyelaraskan tujuan, aktivitas, serta asesmen; dan membantu pembelajaran berlangsung terarah sekaligus tetap adaptif terhadap kondisi kelas.</p></div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-800"><i class="fas fa-thumbs-up"></i>Kelebihan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-emerald-900"><li>Alur dan alokasi pembelajaran dapat dirancang lebih sistematis.</li><li>Keterkaitan tujuan, aktivitas, dan asesmen lebih mudah diperiksa.</li><li>Membantu guru menyiapkan kebutuhan pembelajaran sebelum mengajar.</li></ul></div>
+                                <div class="rounded-2xl border border-rose-100 bg-rose-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-rose-800"><i class="fas fa-triangle-exclamation"></i>Kekurangan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-rose-900"><li>Rencana perlu disesuaikan ketika kondisi kelas berubah.</li><li>Penyusunan yang rinci membutuhkan waktu dan telaah.</li><li>Strategi diferensiasi perlu ditulis secara operasional agar mudah diterapkan.</li></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article id="uas-s3-media" class="scroll-mt-28 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-lg transition-shadow hover:shadow-xl">
+                    <div class="flex flex-col gap-3 bg-gradient-to-r from-slate-900 to-cyan-950 px-6 py-5 text-white sm:flex-row sm:items-center sm:justify-between md:px-8">
+                        <div class="flex items-center gap-4"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-cyan-500 text-lg font-extrabold shadow-lg">02</span><div><p class="text-xs font-semibold uppercase tracking-[.16em] text-cyan-200">Artefak · Siklus 3</p><h3 class="mt-1 text-xl font-bold md:text-2xl">Media Pembelajaran</h3></div></div>
+                        <span class="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90">Sumber dan penyajian materi</span>
+                    </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12">
+                        <div class="bg-slate-100 p-3 sm:p-5 xl:col-span-5">
+                            <div class="mb-3 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-700"><i class="fas fa-eye mr-2 text-cyan-600"></i>Pratinjau presentasi</p><span class="text-[11px] text-slate-500">Google Slides</span></div>
+                            <iframe title="Media Pembelajaran Siklus 3" src="https://docs.google.com/presentation/d/1TJZIH3s-CdkMxUoGbqzY5pK50U8wRHnf/preview" class="h-[390px] w-full rounded-xl border border-slate-200 bg-white shadow-inner md:h-[470px]" loading="lazy" allowfullscreen></iframe>
+                            <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <a href="https://docs.google.com/presentation/d/1TJZIH3s-CdkMxUoGbqzY5pK50U8wRHnf/edit?usp=drive_link" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition"><i class="fas fa-arrow-up-right-from-square"></i>Buka / Review</a>
+                                <a href="https://docs.google.com/presentation/d/1TJZIH3s-CdkMxUoGbqzY5pK50U8wRHnf/export/pptx" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-cyan-400 hover:text-cyan-700"><i class="fas fa-download"></i>Unduh PPTX</a>
+                            </div>
+                            <p class="mt-2 text-[11px] leading-relaxed text-slate-500"><i class="fas fa-circle-info mr-1"></i>Pratinjau dan unduhan mengikuti izin akses file Google Drive/Slides.</p>
+                        </div>
+                        <div class="space-y-5 p-5 md:p-7 xl:col-span-7">
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600"><i class="fas fa-bullseye"></i></span><h4 class="font-bold text-slate-900">Analisis Konteks</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy Siklus 3: Media pembelajaran dipilih untuk membantu penyampaian materi pada siklus 3. Kesesuaiannya perlu ditinjau dari tujuan pembelajaran, karakteristik murid, bentuk materi, kemudahan penggunaan, ketersediaan perangkat, dan akses jaringan.</p></div>
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600"><i class="fas fa-flag-checkered"></i></span><h4 class="font-bold text-slate-900">Tujuan</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Memperjelas konsep dan informasi, menyajikan materi secara lebih terstruktur, menjaga perhatian murid, serta menyediakan representasi yang dapat membantu murid mempelajari kembali materi.</p></div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-800"><i class="fas fa-thumbs-up"></i>Kelebihan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-emerald-900"><li>Membantu memvisualisasikan atau menjelaskan materi.</li><li>Dapat meningkatkan fokus dan keterlibatan apabila digunakan secara tepat.</li><li>Materi dapat ditampilkan secara konsisten dan dipelajari kembali.</li></ul></div>
+                                <div class="rounded-2xl border border-rose-100 bg-rose-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-rose-800"><i class="fas fa-triangle-exclamation"></i>Kekurangan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-rose-900"><li>Efektivitasnya bergantung pada kesesuaian dengan tujuan dan materi.</li><li>Penggunaan perangkat atau jaringan dapat menjadi kendala.</li><li>Media yang terlalu padat dapat mengalihkan perhatian dari inti materi.</li></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                
+    <section class="border-t border-slate-200 bg-gradient-to-b from-white to-slate-50 p-4 sm:p-6 md:p-7" aria-label="Pratinjau media ajar web Siklus 3">
+        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+                <p class="text-[10px] font-bold uppercase tracking-[.18em] text-cyan-600">Pengembangan media digital · Siklus 3</p>
+                <h4 class="mt-1 flex items-center gap-2 text-lg font-extrabold text-slate-900 sm:text-xl"><i class="fas fa-laptop-code text-cyan-600"></i>Preview Media Ajar Berbasis Web</h4>
+                <p class="mt-1 max-w-3xl text-xs leading-relaxed text-slate-500">Media pembelajaran interaktif yang dikembangkan untuk mendukung penyampaian materi. Pratinjau ditampilkan langsung di bawah ini dan dapat dibuka pada tab baru.</p>
+            </div>
+            <span class="w-fit rounded-full border border-cyan-100 bg-cyan-50 px-3 py-1.5 text-[11px] font-semibold text-cyan-700">1 media</span>
+        </div>
+        <div class="grid grid-cols-1 gap-5">
+            <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+        <div class="flex flex-col gap-3 border-b border-slate-100 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+            <div class="flex min-w-0 items-start gap-3">
+                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600"><i class="fas fa-code text-lg"></i></span>
+                <div class="min-w-0">
+                    <p class="text-[10px] font-bold uppercase tracking-[.16em] text-cyan-600">Media ajar berbasis web</p>
+                    <h4 class="mt-1 text-base font-extrabold text-slate-900 sm:text-lg">Belajar Algoritma & Pseudocode</h4>
+                    <p class="mt-0.5 text-xs text-slate-500">Materi Informatika Kelas X · GitHub Pages</p>
+                </div>
+            </div>
+            <a href="https://raferly86.github.io/algoritmandanpseudocode/" target="_blank" rel="noopener noreferrer" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-cyan-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2">
+                <i class="fas fa-arrow-up-right-from-square"></i>Buka halaman
+            </a>
+        </div>
+        <div class="bg-slate-100 p-2 sm:p-3">
+            <div class="mb-2 flex flex-wrap items-center justify-between gap-2 px-1">
+                <span class="text-xs font-semibold text-slate-600"><i class="fas fa-display mr-1.5 text-cyan-600"></i>Pratinjau langsung</span>
+                <span class="rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold text-slate-500">Website eksternal</span>
+            </div>
+            <iframe
+                title="Pratinjau Belajar Algoritma & Pseudocode"
+                src="https://raferly86.github.io/algoritmandanpseudocode/"
+                class="h-[480px] w-full rounded-xl border border-slate-200 bg-white shadow-inner sm:h-[560px] xl:h-[620px]"
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allow="fullscreen"
+                allowfullscreen>
+            </iframe>
+            <p class="px-1 pt-2 text-[11px] leading-relaxed text-slate-500"><i class="fas fa-circle-info mr-1"></i>Jika pratinjau tidak tampil karena kebijakan penyematan dari situs tujuan, gunakan tombol <strong>Buka halaman</strong> untuk melihat media secara langsung.</p>
+        </div>
+        <div class="p-4 sm:p-5">
+            <p class="text-sm leading-relaxed text-slate-600">Media ajar membahas konsep algoritma dan pseudocode melalui contoh sehari-hari, tantangan menyusun langkah secara logis, contoh percabangan, latihan interaktif, serta penghubung pseudocode dengan implementasi Python dan C++.</p>
+            <div class="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3">
+                <span class="text-[11px] font-medium text-slate-400"><i class="fas fa-link mr-1"></i>Materi Informatika Kelas X · GitHub Pages</span>
+                <a href="https://raferly86.github.io/algoritmandanpseudocode/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-bold text-cyan-700 transition hover:text-cyan-900">Lihat halaman penuh <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </article>
+        </div>
+    </section>
+                </article>
+                <article id="uas-s3-lkpd" class="scroll-mt-28 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-lg transition-shadow hover:shadow-xl">
+                    <div class="flex flex-col gap-3 bg-gradient-to-r from-slate-900 to-violet-950 px-6 py-5 text-white sm:flex-row sm:items-center sm:justify-between md:px-8">
+                        <div class="flex items-center gap-4"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-violet-500 text-lg font-extrabold shadow-lg">03</span><div><p class="text-xs font-semibold uppercase tracking-[.16em] text-violet-200">Artefak · Siklus 3</p><h3 class="mt-1 text-xl font-bold md:text-2xl">Lembar Kerja Peserta Didik (LKPD)</h3></div></div>
+                        <span class="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90">Aktivitas dan hasil kerja murid</span>
+                    </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12">
+                        <div class="bg-slate-100 p-3 sm:p-5 xl:col-span-5">
+                            <div class="mb-3 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-700"><i class="fas fa-eye mr-2 text-violet-600"></i>Pratinjau dokumen</p><span class="text-[11px] text-slate-500">Google Drive</span></div>
+                            <iframe title="Lembar Kerja Peserta Didik (LKPD) Siklus 3" src="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/preview" class="h-[390px] w-full rounded-xl border border-slate-200 bg-white shadow-inner md:h-[470px]" loading="lazy" allow="autoplay"></iframe>
+                            <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <a href="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 hover:bg-violet-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition"><i class="fas fa-arrow-up-right-from-square"></i>Buka / Review</a>
+                                <a href="https://drive.google.com/uc?export=download&id=1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-violet-400 hover:text-violet-700"><i class="fas fa-download"></i>Unduh</a>
+                            </div>
+                            <p class="mt-2 text-[11px] leading-relaxed text-slate-500"><i class="fas fa-circle-info mr-1"></i>Pratinjau dan unduhan mengikuti izin akses file Google Drive/Slides.</p>
+                        </div>
+                        <div class="space-y-5 p-5 md:p-7 xl:col-span-7">
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-50 text-violet-600"><i class="fas fa-bullseye"></i></span><h4 class="font-bold text-slate-900">Analisis Konteks</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy Siklus 3: LKPD menjadi panduan aktivitas belajar murid pada siklus 3, baik secara individu maupun kelompok. Konteks penyusunannya perlu mempertimbangkan tujuan, kemampuan awal murid, tingkat kompleksitas tugas, waktu pengerjaan, dan situasi kelas.</p></div>
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-50 text-violet-600"><i class="fas fa-flag-checkered"></i></span><h4 class="font-bold text-slate-900">Tujuan</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Memberikan instruksi dan tahapan aktivitas yang jelas, mengarahkan murid mengeksplorasi materi atau memecahkan masalah, serta menghasilkan bukti kerja untuk didiskusikan dan diberi umpan balik.</p></div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-800"><i class="fas fa-thumbs-up"></i>Kelebihan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-emerald-900"><li>Instruksi dan hasil kerja yang diharapkan lebih terarah.</li><li>Mendukung aktivitas eksplorasi, diskusi, dan pemecahan masalah.</li><li>Hasil pengerjaan dapat menjadi bahan umpan balik dan refleksi.</li></ul></div>
+                                <div class="rounded-2xl border border-rose-100 bg-rose-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-rose-800"><i class="fas fa-triangle-exclamation"></i>Kekurangan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-rose-900"><li>Instruksi yang kurang spesifik dapat menimbulkan salah tafsir.</li><li>Waktu pengerjaan perlu sebanding dengan beban dan tingkat kesulitan tugas.</li><li>Perlu dukungan atau variasi aktivitas untuk mengakomodasi kemampuan murid yang beragam.</li></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article id="uas-s3-asesmen" class="scroll-mt-28 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-lg transition-shadow hover:shadow-xl">
+                    <div class="flex flex-col gap-3 bg-gradient-to-r from-slate-900 to-emerald-950 px-6 py-5 text-white sm:flex-row sm:items-center sm:justify-between md:px-8">
+                        <div class="flex items-center gap-4"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-500 text-lg font-extrabold shadow-lg">04</span><div><p class="text-xs font-semibold uppercase tracking-[.16em] text-emerald-200">Artefak · Siklus 3</p><h3 class="mt-1 text-xl font-bold md:text-2xl">Instrumen Asesmen</h3></div></div>
+                        <span class="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90">Pengukuran ketercapaian tujuan</span>
+                    </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12">
+                        <div class="bg-slate-100 p-3 sm:p-5 xl:col-span-5">
+                            <div class="mb-3 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-700"><i class="fas fa-eye mr-2 text-emerald-600"></i>Pratinjau dokumen</p><span class="text-[11px] text-slate-500">Google Drive</span></div>
+                            <iframe title="Instrumen Asesmen Siklus 3" src="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/preview" class="h-[390px] w-full rounded-xl border border-slate-200 bg-white shadow-inner md:h-[470px]" loading="lazy" allow="autoplay"></iframe>
+                            <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <a href="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition"><i class="fas fa-arrow-up-right-from-square"></i>Buka / Review</a>
+                                <a href="https://drive.google.com/uc?export=download&id=1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-400 hover:text-emerald-700"><i class="fas fa-download"></i>Unduh</a>
+                            </div>
+                            <p class="mt-2 text-[11px] leading-relaxed text-slate-500"><i class="fas fa-circle-info mr-1"></i>Pratinjau dan unduhan mengikuti izin akses file Google Drive/Slides.</p>
+                        </div>
+                        <div class="space-y-5 p-5 md:p-7 xl:col-span-7">
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600"><i class="fas fa-bullseye"></i></span><h4 class="font-bold text-slate-900">Analisis Konteks</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy Siklus 3: Instrumen asesmen digunakan untuk memperoleh bukti proses dan hasil belajar pada siklus 3. Analisis konteks perlu melihat keselarasan instrumen dengan tujuan/indikator, kompetensi yang diukur, karakteristik murid, serta bentuk bukti belajar yang diharapkan.</p></div>
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600"><i class="fas fa-flag-checkered"></i></span><h4 class="font-bold text-slate-900">Tujuan</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Mengumpulkan bukti ketercapaian tujuan pembelajaran, mengenali pemahaman dan kesulitan murid, serta menjadi dasar pemberian umpan balik dan penentuan tindak lanjut pembelajaran.</p></div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-800"><i class="fas fa-thumbs-up"></i>Kelebihan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-emerald-900"><li>Pengumpulan bukti belajar menjadi lebih terarah.</li><li>Membantu guru memetakan pemahaman dan kebutuhan belajar murid.</li><li>Dapat menjadi dasar umpan balik, remedial, atau pengayaan.</li></ul></div>
+                                <div class="rounded-2xl border border-rose-100 bg-rose-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-rose-800"><i class="fas fa-triangle-exclamation"></i>Kekurangan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-rose-900"><li>Butir soal dan rubrik perlu ditelaah agar valid terhadap indikator.</li><li>Satu bentuk asesmen belum tentu mewakili seluruh kompetensi.</li><li>Konsistensi penilaian perlu dijaga, terutama pada tugas kinerja atau produk.</li></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                </div>
+            </section>            <section id="uas-siklus-4" class="scroll-mt-28 space-y-6">
+                <div class="flex flex-col gap-4 rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm md:flex-row md:items-center md:justify-between md:p-7">
+                    <div class="flex items-center gap-4">
+                        <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-xl font-extrabold text-white shadow-lg">4</div>
+                        <div><p class="text-xs font-bold uppercase tracking-[.16em] text-blue-600">E-Portofolio 2 · UAS</p><h2 class="mt-1 text-2xl font-extrabold text-slate-900">Siklus 4</h2><p class="mt-1 text-sm text-slate-500">Pemantapan praktik dan tindak lanjut pembelajaran</p></div>
+                    </div>
+                    <a href="#uas-top" class="inline-flex items-center gap-2 text-sm font-semibold text-blue-700 transition hover:text-blue-900">Kembali ke navigasi <i class="fas fa-arrow-up"></i></a>
+                </div>
+                <nav class="flex flex-wrap gap-2" aria-label="Navigasi artefak Siklus 4"><a href="#uas-s4-modul" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-700"><i class="fas fa-book-open"></i>Modul Ajar/RPP</a><a href="#uas-s4-media" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-700"><i class="fas fa-photo-film"></i>Media Pembelajaran</a><a href="#uas-s4-lkpd" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-700"><i class="fas fa-file-pen"></i>LKPD</a><a href="#uas-s4-asesmen" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-blue-300 hover:text-blue-700"><i class="fas fa-clipboard-check"></i>Instrumen Asesmen</a></nav>
+                <div class="space-y-8">                <article id="uas-s4-modul" class="scroll-mt-28 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-lg transition-shadow hover:shadow-xl">
+                    <div class="flex flex-col gap-3 bg-gradient-to-r from-slate-900 to-blue-950 px-6 py-5 text-white sm:flex-row sm:items-center sm:justify-between md:px-8">
+                        <div class="flex items-center gap-4"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-500 text-lg font-extrabold shadow-lg">01</span><div><p class="text-xs font-semibold uppercase tracking-[.16em] text-blue-200">Artefak · Siklus 4</p><h3 class="mt-1 text-xl font-bold md:text-2xl">Modul Ajar / RPP</h3></div></div>
+                        <span class="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90">Perencanaan pembelajaran</span>
+                    </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12">
+                        <div class="bg-slate-100 p-3 sm:p-5 xl:col-span-5">
+                            <div class="mb-3 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-700"><i class="fas fa-eye mr-2 text-blue-600"></i>Pratinjau dokumen</p><span class="text-[11px] text-slate-500">Google Drive</span></div>
+                            <iframe title="Modul Ajar / RPP Siklus 4" src="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/preview" class="h-[390px] w-full rounded-xl border border-slate-200 bg-white shadow-inner md:h-[470px]" loading="lazy" allow="autoplay"></iframe>
+                            <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <a href="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition"><i class="fas fa-arrow-up-right-from-square"></i>Buka / Review</a>
+                                <a href="https://drive.google.com/uc?export=download&id=1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-blue-400 hover:text-blue-700"><i class="fas fa-download"></i>Unduh</a>
+                            </div>
+                            <p class="mt-2 text-[11px] leading-relaxed text-slate-500"><i class="fas fa-circle-info mr-1"></i>Pratinjau dan unduhan mengikuti izin akses file Google Drive/Slides.</p>
+                        </div>
+                        <div class="space-y-5 p-5 md:p-7 xl:col-span-7">
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600"><i class="fas fa-bullseye"></i></span><h4 class="font-bold text-slate-900">Analisis Konteks</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy Siklus 4: Modul ajar/RPP menjadi rancangan utama pelaksanaan pembelajaran pada siklus 4. Analisis konteks perlu memperhatikan capaian dan tujuan pembelajaran, karakteristik serta kebutuhan murid, materi, alokasi waktu, sarana-prasarana, dan hasil refleksi pembelajaran sebelumnya.</p></div>
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600"><i class="fas fa-flag-checkered"></i></span><h4 class="font-bold text-slate-900">Tujuan</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Menjadi acuan guru dalam mengatur alur pendahuluan, inti, dan penutup; menyelaraskan tujuan, aktivitas, serta asesmen; dan membantu pembelajaran berlangsung terarah sekaligus tetap adaptif terhadap kondisi kelas.</p></div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-800"><i class="fas fa-thumbs-up"></i>Kelebihan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-emerald-900"><li>Alur dan alokasi pembelajaran dapat dirancang lebih sistematis.</li><li>Keterkaitan tujuan, aktivitas, dan asesmen lebih mudah diperiksa.</li><li>Membantu guru menyiapkan kebutuhan pembelajaran sebelum mengajar.</li></ul></div>
+                                <div class="rounded-2xl border border-rose-100 bg-rose-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-rose-800"><i class="fas fa-triangle-exclamation"></i>Kekurangan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-rose-900"><li>Rencana perlu disesuaikan ketika kondisi kelas berubah.</li><li>Penyusunan yang rinci membutuhkan waktu dan telaah.</li><li>Strategi diferensiasi perlu ditulis secara operasional agar mudah diterapkan.</li></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article id="uas-s4-media" class="scroll-mt-28 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-lg transition-shadow hover:shadow-xl">
+                    <div class="flex flex-col gap-3 bg-gradient-to-r from-slate-900 to-cyan-950 px-6 py-5 text-white sm:flex-row sm:items-center sm:justify-between md:px-8">
+                        <div class="flex items-center gap-4"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-cyan-500 text-lg font-extrabold shadow-lg">02</span><div><p class="text-xs font-semibold uppercase tracking-[.16em] text-cyan-200">Artefak · Siklus 4</p><h3 class="mt-1 text-xl font-bold md:text-2xl">Media Pembelajaran</h3></div></div>
+                        <span class="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90">Sumber dan penyajian materi</span>
+                    </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12">
+                        <div class="bg-slate-100 p-3 sm:p-5 xl:col-span-5">
+                            <div class="mb-3 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-700"><i class="fas fa-eye mr-2 text-cyan-600"></i>Pratinjau presentasi</p><span class="text-[11px] text-slate-500">Google Slides</span></div>
+                            <iframe title="Media Pembelajaran Siklus 4" src="https://docs.google.com/presentation/d/1TJZIH3s-CdkMxUoGbqzY5pK50U8wRHnf/preview" class="h-[390px] w-full rounded-xl border border-slate-200 bg-white shadow-inner md:h-[470px]" loading="lazy" allowfullscreen></iframe>
+                            <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <a href="https://docs.google.com/presentation/d/1TJZIH3s-CdkMxUoGbqzY5pK50U8wRHnf/edit?usp=drive_link" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition"><i class="fas fa-arrow-up-right-from-square"></i>Buka / Review</a>
+                                <a href="https://docs.google.com/presentation/d/1TJZIH3s-CdkMxUoGbqzY5pK50U8wRHnf/export/pptx" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-cyan-400 hover:text-cyan-700"><i class="fas fa-download"></i>Unduh PPTX</a>
+                            </div>
+                            <p class="mt-2 text-[11px] leading-relaxed text-slate-500"><i class="fas fa-circle-info mr-1"></i>Pratinjau dan unduhan mengikuti izin akses file Google Drive/Slides.</p>
+                        </div>
+                        <div class="space-y-5 p-5 md:p-7 xl:col-span-7">
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600"><i class="fas fa-bullseye"></i></span><h4 class="font-bold text-slate-900">Analisis Konteks</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy Siklus 4: Media pembelajaran dipilih untuk membantu penyampaian materi pada siklus 4. Kesesuaiannya perlu ditinjau dari tujuan pembelajaran, karakteristik murid, bentuk materi, kemudahan penggunaan, ketersediaan perangkat, dan akses jaringan.</p></div>
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600"><i class="fas fa-flag-checkered"></i></span><h4 class="font-bold text-slate-900">Tujuan</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Memperjelas konsep dan informasi, menyajikan materi secara lebih terstruktur, menjaga perhatian murid, serta menyediakan representasi yang dapat membantu murid mempelajari kembali materi.</p></div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-800"><i class="fas fa-thumbs-up"></i>Kelebihan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-emerald-900"><li>Membantu memvisualisasikan atau menjelaskan materi.</li><li>Dapat meningkatkan fokus dan keterlibatan apabila digunakan secara tepat.</li><li>Materi dapat ditampilkan secara konsisten dan dipelajari kembali.</li></ul></div>
+                                <div class="rounded-2xl border border-rose-100 bg-rose-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-rose-800"><i class="fas fa-triangle-exclamation"></i>Kekurangan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-rose-900"><li>Efektivitasnya bergantung pada kesesuaian dengan tujuan dan materi.</li><li>Penggunaan perangkat atau jaringan dapat menjadi kendala.</li><li>Media yang terlalu padat dapat mengalihkan perhatian dari inti materi.</li></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                
+    <section class="border-t border-slate-200 bg-gradient-to-b from-white to-slate-50 p-4 sm:p-6 md:p-7" aria-label="Pratinjau media ajar web Siklus 4">
+        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+                <p class="text-[10px] font-bold uppercase tracking-[.18em] text-cyan-600">Pengembangan media digital · Siklus 4</p>
+                <h4 class="mt-1 flex items-center gap-2 text-lg font-extrabold text-slate-900 sm:text-xl"><i class="fas fa-laptop-code text-cyan-600"></i>Preview Media Ajar Berbasis Web</h4>
+                <p class="mt-1 max-w-3xl text-xs leading-relaxed text-slate-500">Media pembelajaran interaktif yang dikembangkan untuk mendukung penyampaian materi. Pratinjau ditampilkan langsung di bawah ini dan dapat dibuka pada tab baru.</p>
+            </div>
+            <span class="w-fit rounded-full border border-cyan-100 bg-cyan-50 px-3 py-1.5 text-[11px] font-semibold text-cyan-700">2 media</span>
+        </div>
+        <div class="grid grid-cols-1 gap-5 2xl:grid-cols-2">
+            <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+        <div class="flex flex-col gap-3 border-b border-slate-100 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+            <div class="flex min-w-0 items-start gap-3">
+                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600"><i class="fas fa-image text-lg"></i></span>
+                <div class="min-w-0">
+                    <p class="text-[10px] font-bold uppercase tracking-[.16em] text-cyan-600">Media ajar berbasis web</p>
+                    <h4 class="mt-1 text-base font-extrabold text-slate-900 sm:text-lg">Dari Klik Menjadi Poster</h4>
+                    <p class="mt-0.5 text-xs text-slate-500">Bahan Bacaan Siswa Kelas X · GitHub Pages</p>
+                </div>
+            </div>
+            <a href="https://raferly86.github.io/Dari-Klik-Menjadi-Poster/" target="_blank" rel="noopener noreferrer" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-cyan-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2">
+                <i class="fas fa-arrow-up-right-from-square"></i>Buka halaman
+            </a>
+        </div>
+        <div class="bg-slate-100 p-2 sm:p-3">
+            <div class="mb-2 flex flex-wrap items-center justify-between gap-2 px-1">
+                <span class="text-xs font-semibold text-slate-600"><i class="fas fa-display mr-1.5 text-cyan-600"></i>Pratinjau langsung</span>
+                <span class="rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold text-slate-500">Website eksternal</span>
+            </div>
+            <iframe
+                title="Pratinjau Dari Klik Menjadi Poster"
+                src="https://raferly86.github.io/Dari-Klik-Menjadi-Poster/"
+                class="h-[480px] w-full rounded-xl border border-slate-200 bg-white shadow-inner sm:h-[560px] xl:h-[620px]"
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allow="fullscreen"
+                allowfullscreen>
+            </iframe>
+            <p class="px-1 pt-2 text-[11px] leading-relaxed text-slate-500"><i class="fas fa-circle-info mr-1"></i>Jika pratinjau tidak tampil karena kebijakan penyematan dari situs tujuan, gunakan tombol <strong>Buka halaman</strong> untuk melihat media secara langsung.</p>
+        </div>
+        <div class="p-4 sm:p-5">
+            <p class="text-sm leading-relaxed text-slate-600">Bahan ajar ini menghubungkan model komputer Von Neumann dan peran sistem operasi dengan alur kerja Desain Komunikasi Visual. Materi mencakup input, memori, CPU, output, lapisan sistem komputer, peran sistem operasi, aktivitas simulasi, dan cek pemahaman.</p>
+            <div class="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3">
+                <span class="text-[11px] font-medium text-slate-400"><i class="fas fa-link mr-1"></i>Bahan Bacaan Siswa Kelas X · GitHub Pages</span>
+                <a href="https://raferly86.github.io/Dari-Klik-Menjadi-Poster/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-bold text-cyan-700 transition hover:text-cyan-900">Lihat halaman penuh <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </article>
+<article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+        <div class="flex flex-col gap-3 border-b border-slate-100 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+            <div class="flex min-w-0 items-start gap-3">
+                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600"><i class="fas fa-diagram-project text-lg"></i></span>
+                <div class="min-w-0">
+                    <p class="text-[10px] font-bold uppercase tracking-[.16em] text-violet-600">Media ajar berbasis web</p>
+                    <h4 class="mt-1 text-base font-extrabold text-slate-900 sm:text-lg">Simulasi Komputer Von Neumann</h4>
+                    <p class="mt-0.5 text-xs text-slate-500">Media simulasi interaktif · Canva Sites</p>
+                </div>
+            </div>
+            <a href="https://my-project-raferly.my.canva.site/simulasi-komputer-von-neumann" target="_blank" rel="noopener noreferrer" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2">
+                <i class="fas fa-arrow-up-right-from-square"></i>Buka halaman
+            </a>
+        </div>
+        <div class="bg-slate-100 p-2 sm:p-3">
+            <div class="mb-2 flex flex-wrap items-center justify-between gap-2 px-1">
+                <span class="text-xs font-semibold text-slate-600"><i class="fas fa-display mr-1.5 text-violet-600"></i>Pratinjau langsung</span>
+                <span class="rounded-full bg-white px-2.5 py-1 text-[10px] font-semibold text-slate-500">Website eksternal</span>
+            </div>
+            <iframe
+                title="Pratinjau Simulasi Komputer Von Neumann"
+                src="https://my-project-raferly.my.canva.site/simulasi-komputer-von-neumann"
+                class="h-[480px] w-full rounded-xl border border-slate-200 bg-white shadow-inner sm:h-[560px] xl:h-[620px]"
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allow="fullscreen"
+                allowfullscreen>
+            </iframe>
+            <p class="px-1 pt-2 text-[11px] leading-relaxed text-slate-500"><i class="fas fa-circle-info mr-1"></i>Jika pratinjau tidak tampil karena kebijakan penyematan dari situs tujuan, gunakan tombol <strong>Buka halaman</strong> untuk melihat media secara langsung.</p>
+        </div>
+        <div class="p-4 sm:p-5">
+            <p class="text-sm leading-relaxed text-slate-600">Tautan media simulasi komputer Von Neumann yang disediakan untuk Siklus 4. Detail isi halaman belum dapat diekstrak melalui pemeriksaan teks otomatis; gunakan pratinjau atau tombol buka halaman untuk meninjau isi dan interaksinya secara langsung.</p>
+            <div class="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3">
+                <span class="text-[11px] font-medium text-slate-400"><i class="fas fa-link mr-1"></i>Media simulasi interaktif · Canva Sites</span>
+                <a href="https://my-project-raferly.my.canva.site/simulasi-komputer-von-neumann" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-bold text-violet-700 transition hover:text-violet-900">Lihat halaman penuh <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </article>
+        </div>
+    </section>
+                </article>
+                <article id="uas-s4-lkpd" class="scroll-mt-28 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-lg transition-shadow hover:shadow-xl">
+                    <div class="flex flex-col gap-3 bg-gradient-to-r from-slate-900 to-violet-950 px-6 py-5 text-white sm:flex-row sm:items-center sm:justify-between md:px-8">
+                        <div class="flex items-center gap-4"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-violet-500 text-lg font-extrabold shadow-lg">03</span><div><p class="text-xs font-semibold uppercase tracking-[.16em] text-violet-200">Artefak · Siklus 4</p><h3 class="mt-1 text-xl font-bold md:text-2xl">Lembar Kerja Peserta Didik (LKPD)</h3></div></div>
+                        <span class="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90">Aktivitas dan hasil kerja murid</span>
+                    </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12">
+                        <div class="bg-slate-100 p-3 sm:p-5 xl:col-span-5">
+                            <div class="mb-3 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-700"><i class="fas fa-eye mr-2 text-violet-600"></i>Pratinjau dokumen</p><span class="text-[11px] text-slate-500">Google Drive</span></div>
+                            <iframe title="Lembar Kerja Peserta Didik (LKPD) Siklus 4" src="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/preview" class="h-[390px] w-full rounded-xl border border-slate-200 bg-white shadow-inner md:h-[470px]" loading="lazy" allow="autoplay"></iframe>
+                            <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <a href="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 hover:bg-violet-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition"><i class="fas fa-arrow-up-right-from-square"></i>Buka / Review</a>
+                                <a href="https://drive.google.com/uc?export=download&id=1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-violet-400 hover:text-violet-700"><i class="fas fa-download"></i>Unduh</a>
+                            </div>
+                            <p class="mt-2 text-[11px] leading-relaxed text-slate-500"><i class="fas fa-circle-info mr-1"></i>Pratinjau dan unduhan mengikuti izin akses file Google Drive/Slides.</p>
+                        </div>
+                        <div class="space-y-5 p-5 md:p-7 xl:col-span-7">
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-50 text-violet-600"><i class="fas fa-bullseye"></i></span><h4 class="font-bold text-slate-900">Analisis Konteks</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy Siklus 4: LKPD menjadi panduan aktivitas belajar murid pada siklus 4, baik secara individu maupun kelompok. Konteks penyusunannya perlu mempertimbangkan tujuan, kemampuan awal murid, tingkat kompleksitas tugas, waktu pengerjaan, dan situasi kelas.</p></div>
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-50 text-violet-600"><i class="fas fa-flag-checkered"></i></span><h4 class="font-bold text-slate-900">Tujuan</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Memberikan instruksi dan tahapan aktivitas yang jelas, mengarahkan murid mengeksplorasi materi atau memecahkan masalah, serta menghasilkan bukti kerja untuk didiskusikan dan diberi umpan balik.</p></div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-800"><i class="fas fa-thumbs-up"></i>Kelebihan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-emerald-900"><li>Instruksi dan hasil kerja yang diharapkan lebih terarah.</li><li>Mendukung aktivitas eksplorasi, diskusi, dan pemecahan masalah.</li><li>Hasil pengerjaan dapat menjadi bahan umpan balik dan refleksi.</li></ul></div>
+                                <div class="rounded-2xl border border-rose-100 bg-rose-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-rose-800"><i class="fas fa-triangle-exclamation"></i>Kekurangan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-rose-900"><li>Instruksi yang kurang spesifik dapat menimbulkan salah tafsir.</li><li>Waktu pengerjaan perlu sebanding dengan beban dan tingkat kesulitan tugas.</li><li>Perlu dukungan atau variasi aktivitas untuk mengakomodasi kemampuan murid yang beragam.</li></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article id="uas-s4-asesmen" class="scroll-mt-28 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-lg transition-shadow hover:shadow-xl">
+                    <div class="flex flex-col gap-3 bg-gradient-to-r from-slate-900 to-emerald-950 px-6 py-5 text-white sm:flex-row sm:items-center sm:justify-between md:px-8">
+                        <div class="flex items-center gap-4"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-500 text-lg font-extrabold shadow-lg">04</span><div><p class="text-xs font-semibold uppercase tracking-[.16em] text-emerald-200">Artefak · Siklus 4</p><h3 class="mt-1 text-xl font-bold md:text-2xl">Instrumen Asesmen</h3></div></div>
+                        <span class="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90">Pengukuran ketercapaian tujuan</span>
+                    </div>
+                    <div class="grid grid-cols-1 xl:grid-cols-12">
+                        <div class="bg-slate-100 p-3 sm:p-5 xl:col-span-5">
+                            <div class="mb-3 flex items-center justify-between gap-2"><p class="text-sm font-bold text-slate-700"><i class="fas fa-eye mr-2 text-emerald-600"></i>Pratinjau dokumen</p><span class="text-[11px] text-slate-500">Google Drive</span></div>
+                            <iframe title="Instrumen Asesmen Siklus 4" src="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/preview" class="h-[390px] w-full rounded-xl border border-slate-200 bg-white shadow-inner md:h-[470px]" loading="lazy" allow="autoplay"></iframe>
+                            <div class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                <a href="https://drive.google.com/file/d/1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition"><i class="fas fa-arrow-up-right-from-square"></i>Buka / Review</a>
+                                <a href="https://drive.google.com/uc?export=download&id=1BJBlKg6m-kO6vPMxEtka5GdTQ8fxD6lS" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-400 hover:text-emerald-700"><i class="fas fa-download"></i>Unduh</a>
+                            </div>
+                            <p class="mt-2 text-[11px] leading-relaxed text-slate-500"><i class="fas fa-circle-info mr-1"></i>Pratinjau dan unduhan mengikuti izin akses file Google Drive/Slides.</p>
+                        </div>
+                        <div class="space-y-5 p-5 md:p-7 xl:col-span-7">
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600"><i class="fas fa-bullseye"></i></span><h4 class="font-bold text-slate-900">Analisis Konteks</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy Siklus 4: Instrumen asesmen digunakan untuk memperoleh bukti proses dan hasil belajar pada siklus 4. Analisis konteks perlu melihat keselarasan instrumen dengan tujuan/indikator, kompetensi yang diukur, karakteristik murid, serta bentuk bukti belajar yang diharapkan.</p></div>
+                            <div><div class="mb-2 flex items-center gap-2"><span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600"><i class="fas fa-flag-checkered"></i></span><h4 class="font-bold text-slate-900">Tujuan</h4></div><p class="text-sm leading-relaxed text-slate-600">Dummy: Mengumpulkan bukti ketercapaian tujuan pembelajaran, mengenali pemahaman dan kesulitan murid, serta menjadi dasar pemberian umpan balik dan penentuan tindak lanjut pembelajaran.</p></div>
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div class="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-800"><i class="fas fa-thumbs-up"></i>Kelebihan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-emerald-900"><li>Pengumpulan bukti belajar menjadi lebih terarah.</li><li>Membantu guru memetakan pemahaman dan kebutuhan belajar murid.</li><li>Dapat menjadi dasar umpan balik, remedial, atau pengayaan.</li></ul></div>
+                                <div class="rounded-2xl border border-rose-100 bg-rose-50/70 p-4"><h4 class="mb-2 flex items-center gap-2 text-sm font-bold text-rose-800"><i class="fas fa-triangle-exclamation"></i>Kekurangan</h4><ul class="list-disc space-y-1.5 pl-4 text-xs leading-relaxed text-rose-900"><li>Butir soal dan rubrik perlu ditelaah agar valid terhadap indikator.</li><li>Satu bentuk asesmen belum tentu mewakili seluruh kompetensi.</li><li>Konsistensi penilaian perlu dijaga, terutama pada tugas kinerja atau produk.</li></ul></div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                </div>
+            </section>
+
+            <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:flex md:items-center md:justify-between md:gap-6">
+                <div><p class="font-bold text-slate-900">Tahap penyempurnaan</p><p class="mt-1 text-sm leading-relaxed text-slate-600">Perbarui isi analisis berdasarkan dokumen dan praktik nyata pada masing-masing siklus. Tautan artefak juga dapat diganti secara terpisah setelah file final tersedia.</p></div>
+                <a href="#uas-top" class="mt-3 inline-flex shrink-0 items-center gap-2 font-semibold text-blue-700 hover:text-blue-900 md:mt-0">Kembali ke atas <i class="fas fa-arrow-up"></i></a>
+            </div>
+        </section>
     </main>
 
     <!-- Lightbox Modal untuk memperbesar Foto -->
-    <div id="lightbox-modal" class="fixed inset-0 z-[100] bg-black/95 hidden flex flex-col items-center justify-center p-4 transition-all duration-300 opacity-0" onclick="closeLightbox(event)">
-        <button onclick="forceCloseLightbox()" class="absolute top-6 right-6 text-white text-3xl hover:text-gray-300 transition-colors focus:outline-none">
+    <div id="lightbox-modal" role="dialog" aria-modal="true" aria-label="Pratinjau foto dokumentasi" class="fixed inset-0 z-[100] bg-black/95 hidden flex flex-col items-center justify-center p-4 transition-all duration-300 opacity-0" onclick="closeLightbox(event)">
+        <button onclick="forceCloseLightbox()" aria-label="Tutup pratinjau foto" class="absolute top-6 right-6 text-white text-3xl hover:text-gray-300 transition-colors focus:outline-none">
             <i class="fas fa-times"></i>
         </button>
         <div class="max-w-4xl max-h-[85vh] flex flex-col items-center justify-center" onclick="event.stopPropagation()">
@@ -1487,7 +2239,7 @@
                 <!-- Kolom 2: Menu Cepat -->
                 <div>
                     <h4 class="text-lg font-bold text-white mb-6 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-10 after:h-0.5 after:bg-primary">Menu Cepat</h4>
-                    <ul class="space-y-3">
+                    <ul id="footer-navigation" class="space-y-3">
                         <li>
                             <button onclick="navigate('beranda')" class="text-gray-400 hover:text-primary text-sm font-medium transition-colors flex items-center gap-2">
                                 <i class="fas fa-chevron-right text-xs"></i> Beranda
@@ -1563,167 +2315,295 @@
         </div>
     </footer>
 
-    <!-- JavaScript for SPA Navigation & Interactive Filters -->
+    <!-- Core application: modify MENU_ITEMS when creating new pages. -->
     <script>
-        // ROUTING SYSTEM (Mencegah kembali ke Beranda saat direfresh)
+        'use strict';
+
+        // TAMBAH MENU BARU:
+        // 1. Tambahkan { id: 'nama-menu', label: 'Nama Menu' } ke MENU_ITEMS.
+        // 2. Tambahkan <section id="nama-menu" class="page-section ...">...</section> di <main>.
+        // Ketiga navigasi (desktop, mobile, footer) akan diperbarui otomatis.
+        const MENU_ITEMS = [
+            { id: 'beranda', label: 'Beranda' },
+            { id: 'profil', label: 'Profil' },
+            { id: 'artefak', label: 'Artefak PPL', children: [
+                { id: 'artefak', label: 'Semester I' },
+                { label: 'Semester II', children: [
+                    { id: 'artefak-semester-ii-uts', label: 'E-Portfolio 1 (UTS)' },
+                    { id: 'artefak-semester-ii-uas', label: 'E-Portfolio 2 (UAS)' }
+                ] }
+            ] },
+            { id: 'refleksi', label: 'Refleksi & RTL' },
+            { id: 'dokumentasi', label: 'Dokumentasi' }
+        ];
+        const DEFAULT_PAGE = 'beranda';
+        let lightboxCloseTimer = null;
+        let previousLightboxFocus = null;
+        let routeScrollTimer = null;
+
         function navigate(pageId) {
-            // Update the URL hash. This automatically triggers the 'hashchange' event.
-            window.location.hash = pageId;
+            if (!document.getElementById(pageId)?.classList.contains('page-section')) return;
+            if (window.location.hash === '#' + pageId) {
+                checkRoute();
+            } else {
+                window.location.hash = pageId;
+            }
+            toggleMobileMenu(false);
         }
 
-        // SMART SCROLL FUNCTION (Mencegah perpindahan SPA tak terduga)
+        // Semua tautan menu dibangun dari satu konfigurasi; mudah ditambah lagi.
+        function buildDropdownLink(item) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'portfolio-menuitem';
+            button.textContent = item.label;
+            button.dataset.page = item.id;
+            button.addEventListener('click', () => {
+                navigate(item.id);
+                document.querySelectorAll('.portfolio-menu.is-open, .portfolio-submenu.is-open')
+                    .forEach(node => node.classList.remove('is-open'));
+            });
+            return button;
+        }
+
+        function createDesktopDropdown(item, nested = false) {
+            const wrap = document.createElement('div');
+            wrap.className = nested ? 'portfolio-submenu' : 'portfolio-menu';
+            const trigger = document.createElement('button');
+            trigger.type = 'button';
+            trigger.setAttribute('aria-haspopup', 'true');
+            trigger.setAttribute('aria-expanded', 'false');
+            trigger.className = nested ? 'portfolio-menuitem' : 'nav-link text-gray-600 hover:text-primary transition-colors px-1 py-2 text-sm font-medium flex items-center gap-1';
+            if (!nested) trigger.dataset.page = item.id;
+            trigger.append(document.createTextNode(item.label));
+            const chevron = document.createElement('i');
+            chevron.className = 'fas fa-chevron-' + (nested ? 'right' : 'down') + ' portfolio-chevron';
+            chevron.setAttribute('aria-hidden', 'true');
+            trigger.append(chevron);
+            const panel = document.createElement('div');
+            panel.className = 'portfolio-popover';
+            item.children.forEach(child => {
+                panel.append(child.children ? createDesktopDropdown(child, true) : buildDropdownLink(child));
+            });
+            const setOpen = open => {
+                wrap.classList.toggle('is-open', open);
+                trigger.setAttribute('aria-expanded', String(open));
+            };
+            trigger.addEventListener('click', () => setOpen(!wrap.classList.contains('is-open')));
+            wrap.addEventListener('mouseenter', () => trigger.setAttribute('aria-expanded', 'true'));
+            wrap.addEventListener('mouseleave', () => setOpen(false));
+            wrap.addEventListener('focusout', event => {
+                if (!wrap.contains(event.relatedTarget)) setOpen(false);
+            });
+            wrap.append(trigger, panel);
+            return wrap;
+        }
+
+        function createMobileItem(item, depth = 0) {
+            if (!item.children) {
+                const button = buildDropdownLink(item);
+                button.className = 'portfolio-menuitem hover:bg-blue-50';
+                if (depth === 0) button.className += ' px-4 py-3';
+                return button;
+            }
+            const wrap = document.createElement('div');
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'portfolio-menuitem w-full px-4 py-3';
+            button.setAttribute('aria-expanded', 'false');
+            button.append(document.createTextNode(item.label));
+            const icon = document.createElement('i');
+            icon.className = 'fas fa-chevron-down text-xs';
+            icon.setAttribute('aria-hidden', 'true');
+            button.append(icon);
+            const panel = document.createElement('div');
+            panel.className = 'portfolio-mobile-children';
+            panel.hidden = true;
+            item.children.forEach(child => panel.append(createMobileItem(child, depth + 1)));
+            button.addEventListener('click', () => {
+                panel.hidden = !panel.hidden;
+                button.setAttribute('aria-expanded', String(!panel.hidden));
+                icon.className = 'fas fa-chevron-' + (panel.hidden ? 'down' : 'up') + ' text-xs';
+            });
+            wrap.append(button, panel);
+            return wrap;
+        }
+
+        function renderMenus() {
+            const desktop = document.getElementById('desktop-navigation');
+            const mobile = document.getElementById('mobile-navigation');
+            const footer = document.getElementById('footer-navigation');
+            if (!desktop || !mobile || !footer) return;
+            desktop.replaceChildren();
+            mobile.replaceChildren();
+            footer.replaceChildren();
+            MENU_ITEMS.forEach(item => {
+                if (item.children) {
+                    desktop.append(createDesktopDropdown(item));
+                    mobile.append(createMobileItem(item));
+                } else {
+                    const desktopButton = document.createElement('button');
+                    desktopButton.type = 'button';
+                    desktopButton.className = 'nav-link text-gray-600 hover:text-primary transition-colors px-1 py-2 text-sm font-medium';
+                    desktopButton.dataset.page = item.id;
+                    desktopButton.textContent = item.label;
+                    desktopButton.addEventListener('click', () => navigate(item.id));
+                    desktop.append(desktopButton);
+                    const mobileButton = document.createElement('button');
+                    mobileButton.type = 'button';
+                    mobileButton.className = 'nav-link block w-full text-left text-gray-800 hover:bg-blue-50 hover:text-primary px-4 py-3 rounded-md text-base font-medium';
+                    mobileButton.dataset.page = item.id;
+                    mobileButton.textContent = item.label;
+                    mobileButton.addEventListener('click', () => navigate(item.id));
+                    mobile.append(mobileButton);
+                }
+                const li = document.createElement('li');
+                const footerButton = document.createElement('button');
+                footerButton.type = 'button';
+                footerButton.className = 'text-gray-400 hover:text-primary text-sm font-medium transition-colors flex items-center gap-2';
+                const arrow = document.createElement('i');
+                arrow.className = 'fas fa-chevron-right text-xs';
+                arrow.setAttribute('aria-hidden', 'true');
+                footerButton.append(arrow, document.createTextNode(' ' + item.label));
+                footerButton.addEventListener('click', () => navigate(item.id));
+                li.append(footerButton);
+                footer.append(li);
+            });
+        }
+
         function scrollToSection(sectionId) {
             const element = document.getElementById(sectionId);
-            if (element) {
-                element.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
+            if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function checkRoute() {
-            // Read active page from hash (example: "#profil" becomes "profil")
-            let hash = window.location.hash.replace('#', '');
-            
-            const validPages = ['beranda', 'profil', 'artefak', 'refleksi', 'dokumentasi'];
-            
-            // Periksa jika hash merujuk ke sub-kategori/sub-id (bukan halaman utama)
-            // Jika ada prefix 'kategori-', pertahankan halaman utama 'artefak' tetap aktif
-            let pageId = hash;
-            if (hash.startsWith('kategori-')) {
-                pageId = 'artefak';
-            }
-
-            // Jika hash kosong atau tidak valid, arahkan ke halaman 'beranda' secara default
-            if (!validPages.includes(pageId)) {
-                pageId = 'beranda';
-            }
-
-            // Sembunyikan semua halaman utama
+            const hash = decodeURIComponent(window.location.hash.slice(1));
+            // Subcategory anchors keep their parent page visible.
+            const anchor = hash ? document.getElementById(hash) : null;
+            const section = anchor && anchor.closest('.page-section');
+            const targetId = document.getElementById(hash)?.classList.contains('page-section')
+                ? hash
+                : section && document.getElementById(section.id)?.classList.contains('page-section')
+                    ? section.id : DEFAULT_PAGE;
             document.querySelectorAll('.page-section').forEach(page => {
-                page.classList.remove('active');
+                const active = page.id === targetId;
+                page.classList.toggle('active', active);
+                page.setAttribute('aria-hidden', String(!active));
             });
-            
-            // Tampilkan halaman utama tujuan
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-            }
-            
-            // Perbarui gaya tautan menu navigasi aktif (Desktop & Mobile)
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-                const clickAttr = link.getAttribute('onclick');
-                if(clickAttr && clickAttr.includes(pageId)) {
-                    link.classList.add('active');
-                }
+            document.querySelectorAll('.nav-link[data-page]').forEach(link => {
+                const active = link.dataset.page === targetId || (link.dataset.page === 'artefak' && targetId.startsWith('artefak-')); 
+                link.classList.toggle('active', active);
+                if (active) link.setAttribute('aria-current', 'page');
+                else link.removeAttribute('aria-current');
             });
-
-            // Jika tidak sedang melakukan scroll ke sub-bagian, gulir halaman otomatis ke atas
-            if (!hash.startsWith('kategori-')) {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+            toggleMobileMenu(false);
+            clearTimeout(routeScrollTimer);
+            if (hash && hash !== targetId && anchor && section && section.id === targetId) {
+                routeScrollTimer = setTimeout(() => scrollToSection(hash), 80);
             } else {
-                // Jika halaman baru saja dimuat dengan jangkar sub-kategori, gulir langsung ke target sub-kategori tersebut
-                setTimeout(() => {
-                    scrollToSection(hash);
-                }, 100);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
 
-        // Deteksi navigasi tombol kembali/maju browser atau perubahan hash manual
-        window.addEventListener('hashchange', checkRoute);
-
-        // Jalankan pemeriksaan rute segera setelah seluruh DOM siap
-        window.addEventListener('DOMContentLoaded', () => {
-            checkRoute();
-        });
-
-        // Filter Dokumentasi Cards
         function filterDocs(category, element) {
-            const buttons = document.querySelectorAll('.filter-btn');
-            buttons.forEach(btn => {
-                btn.classList.remove('active', 'bg-primary', 'text-white');
-                btn.classList.add('bg-white', 'text-gray-700', 'hover:bg-gray-100');
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                const active = btn === element;
+                btn.classList.toggle('active', active);
+                btn.classList.toggle('bg-primary', active);
+                btn.classList.toggle('text-white', active);
+                btn.classList.toggle('bg-white', !active);
+                btn.classList.toggle('text-gray-700', !active);
+                btn.classList.toggle('hover:bg-gray-100', !active);
+                btn.setAttribute('aria-pressed', String(active));
             });
-
-            if (element) {
-                element.classList.remove('bg-white', 'text-gray-700', 'hover:bg-gray-100');
-                element.classList.add('active', 'bg-primary', 'text-white');
-            }
-
-            const cards = document.querySelectorAll('.doc-card');
-            cards.forEach(card => {
-                if (card.getAttribute('data-category') === category) {
-                    card.style.display = 'flex';
+            document.querySelectorAll('.doc-card').forEach(card => {
+                const match = card.dataset.category === category;
+                card.style.display = match ? 'flex' : 'none';
+                if (match) {
                     card.style.animation = 'none';
-                    card.offsetHeight; 
+                    void card.offsetHeight;
                     card.style.animation = 'fadeIn 0.5s ease-out forwards';
-                } else {
-                    card.style.display = 'none';
                 }
             });
         }
 
-        // Lightbox Functions
         function openLightbox(imageSrc, captionText) {
             const modal = document.getElementById('lightbox-modal');
             const img = document.getElementById('lightbox-img');
             const caption = document.getElementById('lightbox-caption');
-
+            if (!modal || !img || !caption) return;
+            clearTimeout(lightboxCloseTimer);
+            previousLightboxFocus = document.activeElement;
             img.src = imageSrc;
-            caption.textContent = captionText;
-
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                modal.classList.add('opacity-100');
-                img.classList.remove('scale-95');
-                img.classList.add('scale-100');
-            }, 10);
+            img.alt = captionText || 'Foto dokumentasi';
+            caption.textContent = captionText || '';
+            modal.classList.remove('hidden', 'opacity-0');
+            modal.classList.add('opacity-100');
+            img.classList.remove('scale-95');
+            img.classList.add('scale-100');
+            document.body.style.overflow = 'hidden';
+            modal.querySelector('button')?.focus();
         }
-
-        // Close Lightbox
         function closeLightbox(event) {
-            forceCloseLightbox();
+            if (!event || event.target === event.currentTarget) forceCloseLightbox();
         }
-
         function forceCloseLightbox() {
             const modal = document.getElementById('lightbox-modal');
             const img = document.getElementById('lightbox-img');
-
+            if (!modal || modal.classList.contains('hidden')) return;
             modal.classList.remove('opacity-100');
             modal.classList.add('opacity-0');
             img.classList.remove('scale-100');
-            img.classList.add('scale-95'); // Menyelaraskan transisi pengecilan modal
-
-            setTimeout(() => {
+            img.classList.add('scale-95');
+            document.body.style.overflow = '';
+            previousLightboxFocus?.focus?.();
+            clearTimeout(lightboxCloseTimer);
+            lightboxCloseTimer = setTimeout(() => {
                 modal.classList.add('hidden');
-                img.src = '';
-            }, 300); 
+                img.removeAttribute('src');
+            }, 300);
+        }
+        function toggleMobileMenu(force) {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('mobile-menu-btn');
+            if (!menu || !btn) return;
+            const open = typeof force === 'boolean' ? force : menu.classList.contains('hidden');
+            menu.classList.toggle('hidden', !open);
+            btn.setAttribute('aria-expanded', String(open));
+            btn.setAttribute('aria-label', open ? 'Tutup menu navigasi' : 'Buka menu navigasi');
         }
 
-        // Mobile Menu Toggle
-        const mobileBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        mobileBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        function toggleMobileMenu() {
-            mobileMenu.classList.add('hidden');
-        }
-
-        // Efek bayangan saat melakukan scroll pada Navbar
-        window.addEventListener('scroll', () => {
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMenus();
+            checkRoute();
+            document.getElementById('mobile-menu-btn')?.addEventListener('click', () => toggleMobileMenu());
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape') {
+                    forceCloseLightbox();
+                    toggleMobileMenu(false);
+                    document.querySelectorAll('.portfolio-menu.is-open, .portfolio-submenu.is-open').forEach(node => node.classList.remove('is-open'));
+                }
+                // Make gallery photos operable by keyboard without altering card content.
+                if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('.doc-card img[onclick]')) {
+                    event.preventDefault();
+                    event.target.click();
+                }
+            });
+            document.querySelectorAll('.doc-card img[onclick]').forEach(img => {
+                img.tabIndex = 0;
+                img.setAttribute('role', 'button');
+                img.setAttribute('aria-label', 'Perbesar foto: ' + (img.alt || 'dokumentasi'));
+            });
             const nav = document.querySelector('nav');
-            if (window.scrollY > 20) {
-                nav.classList.add('shadow-md');
-            } else {
-                nav.classList.remove('shadow-md');
-            }
+            const updateNavShadow = () => nav?.classList.toggle('shadow-md', window.scrollY > 20);
+            window.addEventListener('scroll', updateNavShadow, { passive: true });
+            updateNavShadow();
+            // Close mobile navigation after crossing to desktop breakpoint.
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 768) toggleMobileMenu(false);
+            });
         });
+        window.addEventListener('hashchange', checkRoute);
     </script>
 </body>
 </html>
